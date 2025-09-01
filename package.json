@@ -18,7 +18,7 @@
   },
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build && node build.js",
+    "build": "vitepress build",
     "preview": "vitepress preview"
   },
   "dependencies": {

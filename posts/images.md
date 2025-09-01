@@ -11,7 +11,7 @@ head:
       content: vitepress theme bluearchive Images
 ---
 
-This is a image test post.
+This is an image test post.
 
 ---
 
@@ -19,13 +19,7 @@ This is a image test post.
 img 标签的图片灯箱效果需要加入属性选择器：
 
 ```md
-<img src="/shiroko.png" data-fancybox="gallery"/>
+<img src="/bluearchive/shiroko.png" data-fancybox="gallery"/>
+![](/bluearchive/shiroko.png)
+<img src="/bluearchive/shiroko.png" data-fancybox="gallery"/> <img src="/bluearchive/shiroko.png" data-fancybox="gallery"/>
 ```
-
-:::
-
-> `![](/shiroko.png)` ![](/shiroko.png) `<img src="/shiroko.png" data-fancybox="gallery"/>` <img src="/shiroko.png" data-fancybox="gallery"/>
-
-![Caption](/shiroko.jpg)
-
-![](/hoshino1.jpg)

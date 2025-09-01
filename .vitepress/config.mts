@@ -38,6 +38,7 @@ export default defineConfigWithTheme<ThemeConfig>({
   sitemap: {
     hostname: 'https://manhwa-academy.github.io/bluearchive/',
   },
+  
   title: "Sensei's 部落格",
   description: "Sensei's 部落格",
   themeConfig: {
