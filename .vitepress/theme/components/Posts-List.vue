@@ -6,7 +6,7 @@
         <header class="post-header">
           <div v-if="post.cover" class="cover-container">
             <img
-              :src="post.cover"
+              :src="resolveAssetPath(post.cover)"
               class="cover-image"
               :alt="post.title + '-cover'"
               loading="lazy"
@@ -101,9 +101,13 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { data as posts } from '../utils/posts.data'
 import { useStore } from '../store'
 const { state } = useStore()
-const { page } = useData()
-const base = useData().site.value.base
+const { page, site } = useData()
+const base = site.value.base
 
+function resolveAssetPath(path: string) {
+  const normalizedBase = base.endsWith('/') ? base : base + '/'
+  return normalizedBase + path.replace(/^\//, '')
+}
 // 日期格式化
 function formatDate(timestamp: number): string {
   const date = new Date(timestamp)

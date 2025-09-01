@@ -104,6 +104,7 @@ const spineAssets = {
         animation: '15',
         text: '确认连接。'
       },
+
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_04.ogg`,
         animation: '99',
