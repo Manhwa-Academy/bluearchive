@@ -1,0 +1,44 @@
+name: Deploy VitePress site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - phong-sama # Sử dụng nhánh phong-sama thay vì main
+  workflow_dispatch: # Cho phép chạy workflow thủ công
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # Hoặc phiên bản Node.js bạn muốn sử dụng
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build VitePress site
+        run: npm run build
+
+      - name: Upload build to GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: .vitepress/dist # Thư mục chứa các file build của VitePress
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        with:
+          branch: gh-pages # Nhánh sẽ chứa các file của GitHub Pages
