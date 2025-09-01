@@ -12,12 +12,13 @@
     "@types/node": "^22.13.1",
     "less": "^4.2.2",
     "markdown-it-mathjax3": "^4.3.2",
+    "vite-plugin-string": "^1.2.3",
     "vitepress": "^1.6.3",
     "vue": "^3.5.13"
   },
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build",
+    "build": "vitepress build && node build.js",
     "preview": "vitepress preview"
   },
   "dependencies": {
@@ -29,5 +30,5 @@
     "minisearch": "^7.1.1",
     "normalize.css": "^8.0.1",
     "vite": "^7.1.3"
-  } 
+  }
 }

@@ -19,13 +19,13 @@ This is a image test post.
 img 标签的图片灯箱效果需要加入属性选择器：
 
 ```md
-<img src="/wallpaper-2572384.webp" data-fancybox="gallery"/>
+<img src="/shiroko.png" data-fancybox="gallery"/>
 ```
 
 :::
 
-> `![](/wallpaper-2572384.webp)` ![](/wallpaper-2572384.webp) `<img src="/wallpaper-2572384.webp" data-fancybox="gallery"/>` <img src="/wallpaper-2572384.webp" data-fancybox="gallery"/>
+> `![](/shiroko.png)` ![](/shiroko.png) `<img src="/shiroko.png" data-fancybox="gallery"/>` <img src="/shiroko.png" data-fancybox="gallery"/>
 
-![Caption](/wallpaper-2311325.webp)
+![Caption](/shiroko.jpg)
 
-![](/wallpaper-878514.webp)
+![](/hoshino1.jpg)

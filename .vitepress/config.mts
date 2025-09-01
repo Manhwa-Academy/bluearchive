@@ -33,6 +33,7 @@ export default defineConfigWithTheme<ThemeConfig>({
     ],
     ['script', { src: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js' }],
   ],
+
   ignoreDeadLinks: true,
   sitemap: {
     hostname: 'https://manhwa-academy.github.io/bluearchive/',
@@ -62,18 +63,8 @@ export default defineConfigWithTheme<ThemeConfig>({
     ],
     clientID: 'Ov23lia9U9wFN3WMyoKK',
     clientSecret: 'b2418ab598c188c43a247c99e728dd2735d58c3b',
-    repo: 'vitepress-theme-bluearchive',
+    repo: 'bluearchive',
     owner: 'Alittfre',
     admin: ['Alittfre'],
-  },
-  markdown: {
-    theme: 'solarized-dark',
-    lineNumbers: true,
-    math: true,
-    config: (md) => {
-      md.use(mdItCustomAttrs, 'image', {
-        'data-fancybox': 'gallery',
-      })
-    },
-  },
+  }
 })
