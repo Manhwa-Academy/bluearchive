@@ -70,7 +70,7 @@ export default defineConfigWithTheme<ThemeConfig>({
   },
   title: "Sensei's 部落格",
   description: "Sensei's 部落格",
-  themeConfig: {
+  themeConfig: { 
     // navBar
     menuList: [
       { name: '首页', url: '' },
