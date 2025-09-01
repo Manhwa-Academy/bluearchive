@@ -22,18 +22,15 @@ export default defineConfigWithTheme<ThemeConfig>({
   lang: 'zh-CN',
   base: '/bluearchive/', // Cấu hình base cho GitHub Pages
   head: [
-    ['link', { rel: 'shortcut icon', href: '/favicon.ico' }],
+    ['link', { rel: 'shortcut icon', href: '/bluearchive/favicon.ico' }],
     ['link', { rel: 'stylesheet', href: 'https://unpkg.com/gitalk/dist/gitalk.css' }],
     ['script', { src: 'https://unpkg.com/gitalk/dist/gitalk.min.js' }],
+    ['link', { rel: 'stylesheet', href: '/bluearchive/font/Blueaka/Blueaka.css' }],
+    ['link', { rel: 'stylesheet', href: '/bluearchive/font/Blueaka_Bold/Blueaka_Bold.css' }],
     [
       'link',
-      { rel: 'stylesheet', href: '/bluearchive/font/Blueaka/Blueaka.css' },
+      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css' },
     ],
-    [
-      'link',
-      { rel: 'stylesheet', href: '/bluearchive/font/Blueaka_Bold/Blueaka_Bold.css' },
-    ],
-    ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css' }],
     ['script', { src: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js' }],
   ],
   ignoreDeadLinks: true,
@@ -44,7 +41,7 @@ export default defineConfigWithTheme<ThemeConfig>({
   description: "Sensei's 部落格",
   themeConfig: {
     menuList: [
-      { name: '首页', url: '/' },      // Trang chủ
+      { name: '首页', url: '/' }, // Trang chủ
       { name: '标签', url: '/tags/' }, // Trang tags
     ],
     videoBanner: false,
