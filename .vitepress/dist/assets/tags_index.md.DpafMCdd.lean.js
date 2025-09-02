@@ -1,0 +1,1 @@
+import{_ as e,c as t,e as a}from"./chunks/framework._65dfUDb.js";const m=JSON.parse('{"title":"Nhãn","description":"","frontmatter":{"title":"Nhãn"},"headers":[],"relativePath":"tags/index.md","filePath":"tags/index.md"}'),n={name:"tags/index.md"};function s(r,o,c,i,d,p){return a(),t("div")}const f=e(n,[["render",s]]);export{m as __pageData,f as default};
