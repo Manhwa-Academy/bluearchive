@@ -64,7 +64,7 @@ export default defineConfigWithTheme<ThemeConfig>({
       { name: 'GitHub ', url: 'https://github.com/Manhwa-Academy/bluearchive' },
     ],
     clientID: 'Iv23liKzdyZO3e57Ikgh',
-    clientSecret: '2638fb185ac9472900467fa3561ad78aef3cdbac',
+    clientSecret: 'ceb3e0f79197095fc06bd64330a9b8cc26cb1120',
     repo: 'bluearchive',
     owner: 'Manhwa-Academy',
     admin: ['Manhwa-Academy'],
