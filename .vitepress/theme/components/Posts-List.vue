@@ -22,8 +22,8 @@
             <div class="meta-info-bar">
               <span class="iconfont icon-time time"></span>
               <div class="time-info">
+                <!-- Hiển thị currentDate được cập nhật -->
                 <time :datetime="currentDate">{{ currentDate }}</time>
-                <!-- Hiển thị ngày hiện tại -->
               </div>
               <div class="wordcount seperator">Khoảng {{ post.wordCount }} chữ</div>
             </div>
@@ -41,7 +41,55 @@
         </header>
       </article>
     </TransitionGroup>
-    <!-- Pagination và các phần khác giữ nguyên -->
+
+    <div v-if="totalPage != 1" class="pagination">
+      <button
+        :disabled="currPage === 1"
+        :class="{ hide: currPage === 1 }"
+        id="up"
+        @click="goToPage(currPage - 1)"
+      >
+        <i class="iconfont icon-arrow"></i>
+      </button>
+
+      <div class="page-numbers">
+        <button class="page-number" :class="{ active: currPage === 1 }" @click="goToPage(1)">
+          1
+        </button>
+
+        <span v-if="showLeftEllipsis" class="ellipsis">...</span>
+
+        <button
+          v-for="page in visiblePageNumbers"
+          :key="page"
+          class="page-number"
+          :class="{ active: currPage === page }"
+          @click="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+
+        <span v-if="showRightEllipsis" class="ellipsis">...</span>
+
+        <button
+          v-if="totalPage > 1"
+          class="page-number"
+          :class="{ active: currPage === totalPage }"
+          @click="goToPage(totalPage)"
+        >
+          {{ totalPage }}
+        </button>
+      </div>
+
+      <button
+        :disabled="currPage >= totalPage"
+        :class="{ hide: currPage >= totalPage }"
+        id="next"
+        @click="goToPage(currPage + 1)"
+      >
+        <i class="iconfont icon-arrow"></i>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -55,26 +103,29 @@ const { state } = useStore()
 const { page, site } = useData()
 const base = site.value.base
 
+// Tạo biến ref để lưu trữ ngày hiện tại
 const currentDate = ref<string>('')
 
-// Hàm lấy ngày hiện tại và format lại thành YYYY-MM-DD
+// Hàm để cập nhật ngày hiện tại
 function updateDate() {
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date().toISOString().split('T')[0] // Lấy ngày dưới định dạng YYYY-MM-DD
   currentDate.value = today
 }
 
-// Cập nhật ngày mỗi 24h và ngay lập tức khi trang được tải
+// Sử dụng onMounted để thực thi khi component được tải lên
 onMounted(() => {
   updateDate() // Cập nhật ngày ngay khi trang được tải
 
-  const interval = setInterval(updateDate, 1000 * 60 * 60 * 24) // Cập nhật mỗi 24 giờ
+  // Cập nhật mỗi 24 giờ
+  const interval = setInterval(updateDate, 1000 * 60 * 60 * 24)
 
+  // Dọn dẹp interval khi component bị huỷ
   onUnmounted(() => {
-    clearInterval(interval) // Dọn dẹp interval khi component bị hủy
+    clearInterval(interval)
   })
 })
 
-// Hàm để tính số từ trong một bài viết
+// Hàm tính số từ trong nội dung bài viết
 function calculateWordCount(text: string): number {
   const plainText = text.replace(/<[^>]*>/g, '') // Loại bỏ HTML tags
   const words = plainText.match(/[\p{L}\p{N}_]+/gu) // Đếm từ
@@ -203,6 +254,8 @@ watch(
 </script>
 
 <style scoped lang="less">
+/* Các phần CSS giữ nguyên, không thay đổi */
+
 .list-move,
 .list-enter-active,
 .list-leave-active {
