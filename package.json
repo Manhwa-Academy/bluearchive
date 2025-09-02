@@ -20,6 +20,7 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
+    "docs:build": "vitepress build docs",
     "update-dates": "node scripts/updateDates.js"
   },
   "dependencies": {
