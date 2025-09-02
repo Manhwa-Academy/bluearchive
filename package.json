@@ -14,13 +14,15 @@
     "markdown-it-mathjax3": "^4.3.2",
     "vite-plugin-string": "^1.2.3",
     "vitepress": "^1.6.3",
-    "vue": "^3.5.13"
+    "vue": "3"
   },
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
     "docs:build": "vitepress build docs",
+    "posts:build": "vitepress build posts",
+    "posts:dev": "vitepress dev posts",
     "update-dates": "node scripts/updateDates.js"
   },
   "dependencies": {
