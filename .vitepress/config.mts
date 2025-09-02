@@ -1,6 +1,9 @@
 import { defineConfigWithTheme } from 'vitepress'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
 
+const clientID = 'Iv23liKzdyZO3e57Ikgh'
+const clientSecret = '2638fb185ac9472900467fa3561ad78aef3cdbac' // Đây là Client Secret mới
+
 export interface ThemeConfig {
   menuList: { name: string; url: string }[]
   videoBanner: boolean
@@ -11,8 +14,6 @@ export interface ThemeConfig {
   spineVoiceLang: 'zh' | 'jp'
   footerName: string
   poweredList: { name: string; url: string }[]
-  clientID: string
-  clientSecret: string
   repo: string
   owner: string
   admin: string[]
@@ -22,7 +23,7 @@ export default defineConfigWithTheme<ThemeConfig>({
   lang: 'zh-CN',
   ignoreDeadLinks: true,
   base: '/bluearchive/',
-  cleanUrls: false, // ✅ THÊM để tránh lỗi 404 khi vào các path như /tags/
+  cleanUrls: false, // ✅ Thêm để tránh lỗi 404 khi vào các path như /tags/
 
   head: [
     ['link', { rel: 'shortcut icon', href: '/bluearchive/favicon.ico' }],
@@ -61,11 +62,9 @@ export default defineConfigWithTheme<ThemeConfig>({
     spineVoiceLang: 'jp',
     footerName: 'Sensei',
     poweredList: [
-      { name: 'Manhwa-Acedemy', url: 'https://github.com/Manhwa-Academy' },
-      { name: 'GitHub ', url: 'https://github.com/Manhwa-Academy/bluearchive' },
+      { name: 'Manhwa-Academy', url: 'https://github.com/Manhwa-Academy' },
+      { name: 'GitHub', url: 'https://github.com/Manhwa-Academy/bluearchive' },
     ],
-    clientID: 'Iv23liKzdyZO3e57Ikgh',
-    clientSecret: '2638fb185ac9472900467fa3561ad78aef3cdbac',
     repo: 'bluearchive',
     owner: 'Manhwa-Academy',
     admin: ['Manhwa-Academy'],
