@@ -1,0 +1,78 @@
+---
+title: Các yếu tố
+date: '2025-09-02'
+tags:
+  - elements
+  - test
+head:
+  - - meta
+    - name: description
+      content: vitepress-theme-bluearchive Elements
+  - - meta
+    - name: keywords
+      content: vitepress theme bluearchive Elements
+---
+
+Mục đích của bài viết này là giúp bạn đảm bảo tất cả các phần tử HTML đều hiển thị đúng. Nếu bạn sử dụng CSS Reset, đừng quên tự mình định nghĩa lại kiểu.
+
+---
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6
+
+---
+
+## Đoạn văn
+
+Lorem ipsum dolor sit amet, [test link]() consectetur adipiscing elit. **Strong text** pellentesque ligula commodo viverra vehicula. _Italic text_ at ullamcorper enim. Morbi a euismod nibh. <u>Underline text</u> non elit nisl. ~~Deleted text~~ tristique, sem id condimentum tempus, metus lectus venenatis mauris, sit amet semper lorem felis a eros. Fusce egestas nibh at sagittis auctor. Sed ultricies ac arcu quis molestie. Donec dapibus nunc in nibh egestas, vitae volutpat sem iaculis. Curabitur sem tellus, elementum nec quam id, fermentum laoreet mi. Ut mollis ullamcorper turpis, vitae facilisis velit ultricies sit amet. Etiam laoreet dui odio, id tempus justo tincidunt id. Phasellus scelerisque nunc sed nunc ultricies accumsan.
+
+Interdum et malesuada fames ac ante ipsum primis in faucibus. `Sed erat diam`, blandit eget felis aliquam, rhoncus varius urna. Donec tellus sapien, sodales eget ante vitae, feugiat ullamcorper urna. Praesent auctor dui vitae dapibus eleifend. Proin viverra mollis neque, ut ullamcorper elit posuere eget.
+
+> Hiện tại cần phải có thời gian, tạm thời và pulvinar placerat, không hoàn hảo và lớn.
+
+Maecenas ornare arcu at mi suscipit, non molestie tortor ultrices. Aenean convallis, diam et congue ultricies, erat magna tincidunt orci, pulvinar posuere mi sapien ac magna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Praesent vitae placerat mauris. Nullam laoreet ante posuere tortor blandit auctor. Sed id ligula volutpat leo consequat placerat. Mauris fermentum dolor sed augue malesuada sollicitudin. Vivamus ultrices nunc felis, quis viverra orci eleifend ut. Donec et quam id urna cursus posuere. Donec elementum scelerisque laoreet.
+
+## Kiểu danh sách
+
+### Định nghĩa Danh sách (dl)
+
+<dl><dt>Tiêu đề danh sách định nghĩa</dt><dd>Đây là phần danh sách định nghĩa.</dd></dl>
+
+### Danh sách có thứ tự (ol)
+
+1. List Item 1
+2. List Item 2
+3. List Item 3
+
+### Danh sách không có thứ tự (ul)
+
+- List Item 1
+- List Item 2
+- List Item 3
+
+### Danh sách hộp kiểm (ul)
+
+- [ ] List Item 1 unchecked
+- [x] List Item 2 checked
+- [x] List Item 3 checked
+
+## Bảng
+
+| Table Header 1 | Table Header 2 | Table Header 3 |
+| -------------- | -------------- | -------------- |
+| Division 1     | Division 2     | Division 3     |
+| Division 1     | Division 2     | Division 3     |
+| Division 1     | Division 2     | Division 3     |
+
+## Những thứ linh tinh - viết tắt, từ viết tắt, phụ đề, hỗ trợ, kbd, v.v.
+
+Lorem <sup>superscript</sup> dolor <sub>subscript</sub> amet, consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. <cite>cite</cite>. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. <acronym title="National Basketball Association">NBA</acronym> Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus. <abbr title="Avenue">AVE</abbr>. Use <kbd>Crtl</kbd> + <kbd>C</kbd> to stop.
