@@ -62,10 +62,21 @@ export default defineConfigWithTheme<ThemeConfig>({
       { name: 'Manhwa-Acedemy', url: 'https://github.com/Manhwa-Academy' },
       { name: 'GitHub ', url: 'https://github.com/Manhwa-Academy/bluearchive' },
     ],
-    clientID: 'Ov23liP1S2eBADkwArY6',
-    clientSecret: 'dd54e5d713ff16d8dfd2b3a3fdc17beb1def1f0d',
+    clientID: 'Iv23liKzdyZO3e57Ikgh',
+    clientSecret: '2638fb185ac9472900467fa3561ad78aef3cdbac',
     repo: 'bluearchive',
     owner: 'Manhwa-Academy',
     admin: ['Manhwa-Academy'],
+  },
+  markdown: {
+    theme: 'solarized-dark',
+    lineNumbers: true,
+    math: true,
+    config: (md) => {
+      // use more markdown-it plugins!
+      md.use(mdItCustomAttrs, 'image', {
+        'data-fancybox': 'gallery',
+      })
+    },
   },
 })
