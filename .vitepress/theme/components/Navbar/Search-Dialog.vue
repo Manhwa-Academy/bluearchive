@@ -57,16 +57,16 @@ const status = ref('Trống trơn~')
 let timerId: ReturnType<typeof setTimeout> | null = null
 
 function search(): void {
-  status.value = '搜索中……'
+  status.value = 'Đang tìm kiếm...'
   if (timerId) {
     clearTimeout(timerId)
   }
   timerId = setTimeout(() => {
     resultList.value = miniSearch.search(searchStr.value || '').slice(0, 5)
     if (resultList.value.length) {
-      status.value = '搜到了~'
+      status.value = 'Đã tìm thấy rồi~'
     } else {
-      status.value = '这里空空的'
+      status.value = 'Ở đây trống rỗng'
     }
   }, 500)
 }

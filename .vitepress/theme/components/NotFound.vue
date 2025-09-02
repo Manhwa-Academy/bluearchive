@@ -1,8 +1,8 @@
 <template>
   <div class="not-found">
     <img src="../assets/NotFound.webp" alt="" />
-    <span>页面不存在</span>
-    <span class="band"><a :href="base">回到主页</a></span>
+    <span>Trang không tồn tại</span>
+    <span class="band"><a :href="base">Trở lại trang chủ</a></span>
   </div>
 </template>
 <script setup lang="ts">
