@@ -3,12 +3,12 @@
     <div class="dialog-cover" @click="closeDialog"></div>
     <div class="dialog-content">
       <button type="button" class="close-btn" @click="closeDialog">×</button>
-      <span class="title">搜索</span>
+      <span class="title">Tìm kiếm</span>
       <input
         type="text"
         name=""
         id="search-input"
-        placeholder="请输入关键字"
+        placeholder="Vui lòng nhập từ khóa"
         v-model="searchStr"
         @input="search"
       />
@@ -53,7 +53,7 @@ miniSearch.addAll(posts)
 
 const searchStr = defineModel<string>()
 const resultList = ref<SearchResult[]>([])
-const status = ref('这里空空的')
+const status = ref('Trống trơn~')
 let timerId: ReturnType<typeof setTimeout> | null = null
 
 function search(): void {

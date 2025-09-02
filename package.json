@@ -19,7 +19,8 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "preview": "vitepress preview"
+    "preview": "vitepress preview",
+    "update-dates": "node scripts/updateDates.js"
   },
   "dependencies": {
     "animejs": "^3.2.2",

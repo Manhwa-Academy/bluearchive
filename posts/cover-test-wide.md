@@ -1,12 +1,11 @@
 ---
-title: Cover test 2
-
-date: 2025-5-10
-
-tags: [image]
-
+title: Nguyễn Ngọc Phước
+date: '2025-09-02'
+pinned: true
+tags:
+  - image
 cover: /wallpaper-878514.webp
 ---
-This is a cover test post.
+Thông tin cá nhân.
 
 ---

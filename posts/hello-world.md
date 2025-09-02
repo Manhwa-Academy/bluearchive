@@ -1,8 +1,11 @@
 ---
 title: HelloWorld
-date: 2024-04-16
-tags: [HelloWorld, vue, vitepress]
-pinned: true
+date: '2025-09-02'
+tags:
+  - HelloWorld
+  - vue
+  - vitepress
+pinned: true 
 head:
   - - meta
     - name: description
@@ -12,7 +15,7 @@ head:
       content: vitepress theme bluearchive HelloWorld
 ---
 
-只是一个 HelloWorld
+Xin chào Thế Giới!
 
 ---
 

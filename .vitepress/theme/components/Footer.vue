@@ -4,7 +4,7 @@
       <span>© {{ new Date().getFullYear() }} {{ footerName }} </span>
       <br />
       <span
-        >Powered by
+        >Cung cấp bởi
         <span class="powered-list" v-for="(obj, ind) in poweredList" :key="obj.url"
           ><a :href="obj.url">{{ obj.name }}</a
           >{{ ind < poweredList.length - 1 ? ' & ' : '' }}</span

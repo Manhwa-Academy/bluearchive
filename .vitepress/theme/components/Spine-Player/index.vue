@@ -49,32 +49,32 @@ const spineAssets = {
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_01.ogg`,
         animation: '12',
-        text: '您回来了？我等您很久啦！'
+        text: 'Anh về rồi à? Em đợi anh lâu lắm rồi.！'
       },
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_02.ogg`,
         animation: '03',
-        text: '嗯，不错，今天也是个好天气。'
+        text: 'Vâng, hôm nay là một ngày đẹp trời.。'
       },
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_03.ogg`,
         animation: '02',
-        text: '天空真是广啊……\n另一边会有些什么呢？'
+        text: 'Bầu trời rộng lớn quá...\nPhía bên kia có gì？'
       },
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_04.ogg`,
         animation: '18',
-        text: '偶尔也要为自己的健康着想啊，\n老师，我会很担心的。'
+        text: 'Thỉnh thoảng thầy cũng phải nghĩ cho sức khỏe của mình nữa, \nThầy ạ, em sẽ rất lo lắng đấy。'
       },
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_05.ogg`,
         animation: '25',
-        text: '来，加油吧，老师！'
+        text: 'Thôi nào, thôi nào, thầy！'
       },
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_06.ogg`,
         animation: '11',
-        text: '今天又会有什么事情在等着我呢？'
+        text: 'Hôm nay lại sẽ có chuyện gì đang chờ đợi mình đây nhỉ？'
       }
     ]
   },
@@ -92,28 +92,28 @@ const spineAssets = {
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_02.ogg`,
         animation: '06',
-        text: '我明白了，\n老师现在无事可做，很无聊。'
+        text: 'Em hiểu rồi, \nThầy bây giờ không có việc gì làm, rất buồn chán。'
       },
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_01.ogg`,
         animation: '13',
-        text: '混乱，该行动无法理解。\n请不要戳我，会出现故障。'
+        text: 'Hỗn loạn, hành động này không thể hiểu được. \nXin đừng chọc em, sẽ xảy ra sự cố。'
       },
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_03.ogg`,
         animation: '15',
-        text: '确认连接。'
+        text: 'Xác nhận kết nối。'
       },
 
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_04.ogg`,
         animation: '99',
-        text: '正在待命，\n需要解决的任务还有很多。'
+        text: 'Đang chờ lệnh, \nvẫn còn nhiều nhiệm vụ đang chờ được hoàn thành。'
       },
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_05.ogg`,
         animation: '17',
-        text: '等您很久了。'
+        text: 'Đợi thầy rất lâu rồi.'
       },
     ]
   }
@@ -163,7 +163,7 @@ const AudioManager = {
       this.buffers.set(url, { buffer: audioBuffer, lastUsed: Date.now() });
       return audioBuffer;
     } catch (error) {
-      console.error('音频加载失败:', error);
+      console.error('Tải âm thanh không thành công:', error);
       return null;
     }
   },
@@ -220,7 +220,7 @@ const preloadAudio = async () => {
   )
 
   return Promise.all(loadPromises).catch(error => {
-    console.error('音频预加载失败:', error)
+    console.error('Tải trước âm thanh không thành công:', error)
     return false
   })
 }
@@ -293,7 +293,7 @@ const handlePlayerClick = debounce(async (event) => {
 
     try {
       const buffer = await AudioManager.loadAudioFile(selectedPair.audio);
-      if (!buffer) throw new Error('音频加载失败');
+      if (!buffer) throw new Error('Tải âm thanh không thành công');
 
       currentDialog.value = selectedPair.text;
       showDialog.value = true;
@@ -310,7 +310,7 @@ const handlePlayerClick = debounce(async (event) => {
       showDialog.value = false;
 
     } catch (error) {
-      console.error('音频播放失败:', error);
+      console.error('Phát lại âm thanh không thành công:', error);
       isPlaying = false;
       isEyeControlDisabled.value = false;
       showDialog.value = false;
@@ -475,11 +475,11 @@ const initializeSpinePlayer = async (assets) => {
         playBlinkAnimation()
       },
       error: function (playerInstance, reason) {
-        console.error('Spine加载失败: ' + reason)
+        console.error('Tải Spine thất bại: ' + reason)
       }
     })
   } catch(err) {
-    console.error('Failed to initialize spine player:', err);
+    console.error('Không thể khởi tạo trình phát spine:', err);
   }
 }
 
@@ -541,7 +541,7 @@ const initializeCharacter = async () => {
       initializeSpinePlayer(currentAssets.value)
     ])
   } catch (err) {
-    console.error('初始化失败:', err)
+    console.error('Khởi tạo không thành công:', err)
   }
 }
 

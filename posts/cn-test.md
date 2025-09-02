@@ -1,7 +1,9 @@
 ---
-title: 中文測試
-date: 2013-12-24
-tags: [Chinese, test]
+title: Bài kiểm tra tiếng Trung
+date: '2025-09-02'
+tags:
+  - Chinese
+  - test
 head:
   - - meta
     - name: description
@@ -11,20 +13,18 @@ head:
       content: vitepress theme bluearchive 中文测试
 ---
 
-This is a Chinese test post.
+Đây là bài kiểm tra của Trung Quốc.
 
 ---
 
-This is a Chinese test post.
+Đây là bài kiểm tra của Trung Quốc.
 
-善我王上魚、產生資西員合兒臉趣論。畫衣生這著爸毛親可時，安程幾？合學作。觀經而作建。都非子作這！法如言子你關！手師也。
+Giỏi câu cá, ta, vua, đã nghĩ ra những lý thuyết thú vị về khuôn mặt của bọn trẻ. Con có thể vẽ bộ đồ lông thú này cùng cha không? Bao nhiêu năm đã trôi qua? Cùng nhau học tập. Xem kinh thánh và xây dựng. Không có lỗi nào trong số này cả! Phương pháp thì như ta đã nói, con trai! Giáo viên cũng...
 
-以也座論頭室業放。要車時地變此親不老高小是統習直麼調未，行年香一？
+Còn nữa, đầu óc đang ở trong phòng. Muốn thay đổi thời gian và địa điểm xe sao? Đây chẳng phải là quá trình học tập thống nhất sao? Du lịch một năm sao?
 
-就竟在，是我童示讓利分和異種百路關母信過明驗有個歷洋中前合著區亮風值新底車有正結，進快保的行戰從：弟除文辦條國備當來際年每小腳識世可的的外的廣下歌洲保輪市果底天影；全氣具些回童但倒影發狀在示，數上學大法很，如要我……月品大供這起服滿老？應學傳者國：山式排只不之然清同關；細車是！停屋常間又，資畫領生，相們制在？公別的人寫教資夠。資再我我！只臉夫藝量不路政吃息緊回力之；兒足灣電空時局我怎初安。意今一子區首者微陸現際安除發連由子由而走學體區園我車當會，經時取頭，嚴了新科同？很夫營動通打，出和導一樂，查旅他。坐是收外子發物北看蘭戰坐車身做可來。道就學務。
+Cuối cùng, chính con trai ta đã cho thấy những lợi ích và sự khác biệt của các loài. Trăm con đường và niềm tin của mẹ đã chứng minh rằng có một chiếc xe mới sáng bóng với đáy tích cực. Hãy bước vào nhanh chóng và an toàn: từ chiến trường đất nước, mỗi bước chân nhỏ bé đều có thể hiểu được thế giới. Thế giới có thể được mở rộng. Bài ca của thế giới dưới bánh xe thành phố đầy bóng tối; toàn bộ bầu không khí đã trọn vẹn, nhưng hình ảnh phản chiếu của đứa trẻ đang hiện ra. Số lượng phương pháp rất lớn. Nếu ta muốn... một tháng sản phẩm, dịch vụ này có đầy người già không? Nên tìm hiểu về vùng quê: cách sắp xếp theo kiểu miền núi không rõ ràng chút nào; xe thì ổn! Phòng thường lại đóng cửa. Học sinh đang vẽ và học sinh đang làm việc. Họ đang làm việc trong văn phòng sao? Những người khác đang viết về tài liệu giảng dạy. Tôi lại viết! Điều duy nhất tôi không thể làm là quản lý việc quản lý đường bộ. Tình hình hiện tại rất căng thẳng và tôi không thể đảm bảo an toàn. Tôi lo lắng về tình hình hiện tại. Tôi lo lắng về khu học chánh mới. Khu học chánh hiện đã mở cửa và học sinh đang rời đi. Tôi đang bận. Đây là một khu học chánh mới rất nghiêm ngặt. Khu học chánh hiện đã mở cửa và học sinh đang ra ngoài và dẫn dắt trường học. Anh ấy đang kiểm tra học sinh. Anh ấy có thể đi tàu lên phía bắc để gặp học sinh. Anh ấy có thể đi tàu lên phía bắc để gặp học sinh. Anh ấy đang bận.
 
-國新故。
+Vùng đất mới.
 
-> 工步他始能詩的，裝進分星海演意學值例道……於財型目古香亮自和這乎？化經溫詩。只賽嚴大一主價世哥受的沒有中年即病行金拉麼河。主小路了種就小為廣不？
-
-_From [亂數假文產生器 - Chinese Lorem Ipsum](http://www.richyli.com/tool/loremipsum/)_
+> Anh ấy bắt đầu biết làm thơ, rồi mới có thể thực hành. Đây có phải là loại thơ cổ điển tao nhã không? Thơ ấm áp, tao nhã. Chỉ có giá trị chủ yếu của thế gian là không bị ảnh hưởng bởi căn bệnh tuổi trung niên của Kim La Giang. Chẳng lẽ đại đạo lại là tiểu đạo sao?

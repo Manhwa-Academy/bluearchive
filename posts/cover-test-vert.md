@@ -1,12 +1,11 @@
 ---
-title: Cover test 3
-
-date: 2025-5-9
-
-tags: [image]
-
+title: Nguyễn Quang Tuấn Anh
+date: '2025-09-02'
+pinned: true
+tags:
+  - image
 cover: /wallpaper-2311325.webp
 ---
-This is a cover test post.
+Thông tin cá nhân.
 
 ---

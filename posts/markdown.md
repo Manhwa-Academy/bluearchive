@@ -1,7 +1,9 @@
 ---
-title: Markdown Style test
-date: 2018-07-24
-tags: [Foo, Bar]
+title: Thử nghiệm kiểu hiển thị Markdown
+date: '2025-09-02'
+tags:
+  - Foo
+  - Bar
 head:
   - - meta
     - name: description
@@ -11,7 +13,7 @@ head:
       content: vitepress theme bluearchive Markdown Style test
 ---
 
-This post is originated from https://gist.github.com/apackeer/4159268 and is used for testing markdown style. This post contains nearly every markdown usage. Make sure all the markdown elements below show up correctly.
+Bài viết này được lấy từ https://gist.github.com/apackeer/4159268 và được sử dụng để kiểm tra kiểu markdown. Bài viết này bao gồm hầu hết mọi cách sử dụng markdown. Hãy đảm bảo tất cả các phần tử markdown bên dưới hiển thị chính xác.
 
 ---
 
@@ -30,7 +32,7 @@ This post is originated from https://gist.github.com/apackeer/4159268 and is use
 
 ###### H6
 
-Alternatively, for H1 and H2, an underline-ish style:
+Ngoài ra, đối với H1 và H2, hãy sử dụng kiểu gạch chân:
 
 # Alt-H1
 
@@ -49,7 +51,7 @@ Alternatively, for H1 and H2, an underline-ish style:
 
 ###### H6
 
-Alternatively, for H1 and H2, an underline-ish style:
+Ngoài ra, đối với H1 và H2, hãy sử dụng kiểu gạch chân:
 
 # Alt-H1
 
@@ -57,150 +59,147 @@ Alternatively, for H1 and H2, an underline-ish style:
 
 ## Emphasis
 
-```markdown
-Emphasis, aka italics, with _asterisks_ or _underscores_.
+````markdown
+Chữ nghiêng có thể được viết bằng dấu sao (\*) hoặc dấu gạch dưới (\_).
 
-Strong emphasis, aka bold, with **asterisks** or **underscores**.
+Chữ đậm cũng được viết bằng hai dấu sao (\*\*) hoặc hai dấu gạch dưới (\_\_).
 
-Combined emphasis with **asterisks and _underscores_**.
+Bạn cũng có thể kết hợp chữ đậm và chữ nghiêng trong cùng một câu.
 
-Strikethrough uses two tildes. ~~Scratch this.~~
-```
-
-Emphasis, aka italics, with _asterisks_ or _underscores_.
-
-Strong emphasis, aka bold, with **asterisks** or **underscores**.
-
-Combined emphasis with **asterisks and _underscores_**.
-
-Strikethrough uses two tildes. ~~Scratch this.~~
+Gạch bỏ chữ (như thế này) thì dùng hai dấu ngã (~~) ở đầu và cuối.
 
 ## Lists
 
 ```markdown
-1. First ordered list item
-2. Another item
+1. Mục đầu tiên trong danh sách có thứ tự
+2. Một mục khác
 
-- Unordered sub-list.
+- Danh sách phụ không có thứ tự.
 
-1. Actual numbers don't matter, just that it's a number
-1. Ordered sub-list
-1. And another item.
+1. Con số thực sự không quan trọng, miễn là có số thứ tự
+2. Danh sách con có thứ tự
+3. Và thêm một mục nữa.
 
-   You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).
+   Bạn có thể viết các đoạn văn thụt lề đúng cách trong một mục của danh sách. Hãy chú ý dòng trống phía trên và phần thụt đầu dòng (ít nhất một dấu cách, ở đây ta dùng ba để canh thẳng với mã Markdown gốc).
 
-   To have a line break without a paragraph, you will need to use two trailing spaces.
-   Note that this line is separate, but within the same paragraph.
-   (This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)
+   Để xuống dòng mà không tạo đoạn văn mới, bạn cần thêm hai dấu cách ở cuối dòng.
 
-- Unordered list can use asterisks
+   Dòng này sẽ được tách riêng, nhưng vẫn nằm trong cùng một đoạn.
 
-* Or minuses
+   (Điều này khác với hành vi thông thường của GFM – GitHub Flavored Markdown – nơi bạn không cần hai dấu cách để xuống dòng.)
 
-- Or pluses
+- Danh sách không có thứ tự có thể dùng dấu hoa thị (\*)
 
-* Paragraph In unordered list
+* Hoặc dùng dấu gạch ngang (-)
 
-  For example like this.
+- Hoặc dùng dấu cộng (+)
 
-Common Paragraph with some text.
-And more text.
+* Đoạn văn trong danh sách không có thứ tự
+
+Ví dụ như thế này.
+
+Đoạn văn bình thường với một ít nội dung.
+Và thêm một vài dòng nữa.
 ```
+````
 
-1. First ordered list item
-2. Another item
+1. Mục đầu tiên trong danh sách có thứ tự
+2. Một mục khác
 
-- Unordered sub-list.
+- Danh sách phụ không có thứ tự.
 
-1. Actual numbers don't matter, just that it's a number
-1. Ordered sub-list
-1. And another item.
+1. Con số thực sự không quan trọng, miễn là có số thứ tự
+2. Danh sách con có thứ tự
+3. Và thêm một mục nữa.
 
-   You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).
+   Bạn có thể viết các đoạn văn thụt lề đúng cách trong một mục của danh sách. Hãy chú ý dòng trống phía trên và phần thụt đầu dòng (ít nhất một dấu cách, ở đây ta dùng ba để canh thẳng với mã Markdown gốc).
 
-   To have a line break without a paragraph, you will need to use two trailing spaces.
-   Note that this line is separate, but within the same paragraph.
-   (This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)
+Để xuống dòng mà không tạo đoạn văn mới, bạn cần thêm hai dấu cách ở cuối dòng.
 
-- Unordered list can use asterisks
+Dòng này sẽ được tách riêng, nhưng vẫn nằm trong cùng một đoạn.
 
-* Or minuses
+(Điều này khác với hành vi thông thường của GFM – GitHub Flavored Markdown – nơi bạn không cần hai dấu cách để xuống dòng.)
 
-- Or pluses
+- Danh sách không có thứ tự có thể dùng dấu hoa thị (\*)
 
-* Paragraph In unordered list
+* Hoặc dùng dấu gạch ngang (-)
 
-  For example like this.
+- Hoặc dùng dấu cộng (+)
 
-Common Paragraph with some text.
-And more text.
+* Đoạn văn trong danh sách không có thứ tự
+
+  Ví dụ như thế này.
+
+Đoạn văn bình thường với một ít nội dung.
+Và thêm một vài dòng nữa.
 
 ## Inline HTML
 
 ```markdown
-<p>To reboot your computer, press <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd>.</p>
+<p>Để khởi động lại máy tính, hãy nhấn <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd>.</p>
 ```
 
-<p>To reboot your computer, press <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd>.</p>
+<p>Để khởi động lại máy tính, hãy nhấn <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd>.</p>
 
 ```markdown
 <dl>
-    <dt>Definition list</dt>
-    <dd>Is something people use sometimes.</dd>
+<dt>Danh sách định nghĩa</dt>
+<dd>Là thứ mọi người đôi khi sử dụng.</dd>
 
-    <dt>Markdown in HTML</dt>
-    <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
+<dt>Markdown trong HTML</dt>
+<dd>Không* hoạt động **tốt** lắm. Hãy sử dụng <em>thẻ</em> HTML.</dd>
 
 </dl>
 ```
 
 <dl>
-    <dt>Definition list</dt>
-    <dd>Is something people use sometimes.</dd>
-    <dt>Markdown in HTML</dt>
-    <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
+<dt>Danh sách định nghĩa</dt>
+<dd>Là thứ mọi người đôi khi sử dụng.</dd>
+
+<dt>Markdown trong HTML</dt>
+<dd>Không* hoạt động **tốt** lắm. Hãy sử dụng <em>thẻ</em> HTML.</dd>
+
 </dl>
 
 ## Links
 
 ```markdown
-[I'm an inline-style link](https://www.google.com)
+[Tôi là một liên kết kiểu nội tuyến](https://www.facebook.com/Shiroko412)
 
-[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
+[Tôi là một liên kết kiểu nội tuyến có tiêu đề](https://www.facebook.com/Shiroko412 "Sunaookami Shiroko")
 
-[I'm a reference-style link][Arbitrary case-insensitive reference text]
+[Tôi là một liên kết kiểu tham chiếu][Văn bản tham chiếu không phân biệt chữ hoa chữ thường tùy ý]
 
-[I'm a relative reference to a repository file](../blob/master/LICENSE)
+[Tôi là một tham chiếu tương đối đến một tệp kho lưu trữ](../blob/master/LICENSE)
 
-[You can use numbers for reference-style link definitions][1]
+[Bạn có thể sử dụng số cho các định nghĩa liên kết kiểu tham chiếu][1]
 
-Or leave it empty and use the [link text itself]
+Hoặc để trống và sử dụng [văn bản liên kết]
 
-Some text to show that the reference links can follow later.
+Một số văn bản để cho thấy các liên kết tham chiếu có thể theo sau.
 
-[arbitrary case-insensitive reference text]: https://hexo.io
-[1]: https://hexo.io/docs/
-[link text itself]: https://hexo.io/api/
+[Văn bản tham chiếu không phân biệt chữ hoa chữ thường tùy ý]: https://goctruyentranhvui17.com/trang-chu
+[1]: https://goctruyentranhvui17.com/truyen/theo-doi
+[văn bản liên kết]: https://goctruyentranhvui17.com/
 ```
 
-[I'm an inline-style link](https://www.google.com)
+[Tôi là một liên kết kiểu nội tuyến](https://www.facebook.com/Shiroko412)
 
-[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
+[Tôi là một liên kết kiểu nội tuyến có tiêu đề](https://www.facebook.com/Shiroko412 "Sunaookami Shiroko")
 
-[I'm a reference-style link][Arbitrary case-insensitive reference text]
+[Tôi là một liên kết kiểu tham chiếu][Văn bản tham chiếu không phân biệt chữ hoa chữ thường tùy ý]
 
-[I'm a relative reference to a repository file](../blob/master/LICENSE)
+[Tôi là một tham chiếu tương đối đến một tệp kho lưu trữ](../blob/master/LICENSE)
 
-[You can use numbers for reference-style link definitions][1]
+[Bạn có thể sử dụng số cho các định nghĩa liên kết kiểu tham chiếu][1]
 
-Or leave it empty and use the [link text itself]
+Hoặc để trống và sử dụng [văn bản liên kết]
 
-Some text to show that the reference links can follow later.
+Một số văn bản để cho thấy các liên kết tham chiếu có thể theo sau.
 
-[arbitrary case-insensitive reference text]: https://hexo.io
-[1]: https://hexo.io/docs/
-[link text itself]: https://hexo.io/api/
-
+[Văn bản tham chiếu không phân biệt chữ hoa chữ thường tùy ý]: https://goctruyentranhvui17.com/trang-chu
+[1]: https://goctruyentranhvui17.com/truyen/theo-doi
+[văn bản liên kết]: https://goctruyentranhvui17.com/
 ## Images
 
 ```markdown
@@ -208,24 +207,24 @@ hover to see the title text:
 
 Inline-style:
 
-![alt text](https://hexo.io/icon/favicon-196x196.png 'Logo Title Text 1')
+![alt text](https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 1')
 
 Reference-style:
 ![alt text][logo]
 
-[logo]: https://hexo.io/icon/favicon-196x196.png 'Logo Title Text 2'
+[logo]: https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 2'
 ```
 
-hover to see the title text:
+di chuột để xem văn bản tiêu đề:
 
 Inline-style:
 
-![alt text](https://hexo.io/icon/favicon-196x196.png 'Logo Title Text 1')
+![alt text]((https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 1')
 
 Reference-style:
 ![alt text][logo]
 
-[logo]: https://hexo.io/icon/favicon-196x196.png 'Logo Title Text 2'
+[logo]: (https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 2'
 
 ## Code and Syntax Highlighting
 
@@ -242,8 +241,8 @@ print s
 ```
 
 ```
-No language indicated, so no syntax highlighting.
-But let's throw in a <b>tag</b>.
+Không có ngôn ngữ nào được chỉ định, nên không có cú pháp tô sáng.
+Nhưng hãy thêm một thẻ <b></b>.
 ```
 
 ## Tables
@@ -278,7 +277,7 @@ Colons can be used to align columns.
 | col 2 is      |   centered    |      |
 | zebra stripes |   are neat    |      |
 
-The outer pipes (|) are optional, and you don't need to make the raw Markdown line up prettily. You can also use inline Markdown.
+Các dấu gạch ngang (|) là tùy chọn, và bạn không cần phải căn chỉnh Markdown thô sao cho đẹp mắt. Bạn cũng có thể sử dụng Markdown nội tuyến.
 
 ```markdown
 | Markdown | Less      | Pretty     |
@@ -292,20 +291,20 @@ The outer pipes (|) are optional, and you don't need to make the raw Markdown li
 | _Still_  | `renders` | **nicely** |
 | 1        | 2         | 3          |
 
-> You can find more information about **LaTeX** mathematical expressions [here](https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
+> Bạn có thể tìm thêm thông tin về các biểu thức toán học **LaTeX** [tại đây](https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
 
-## Blockquotes
+## Trích dẫn
 
-> Blockquotes are very handy in email to emulate reply text.
-> This line is part of the same quote.
+> Trích dẫn rất hữu ích trong email để mô phỏng văn bản trả lời.
+> Dòng này là một phần của cùng một trích dẫn.
 
-Quote break.
+Trích dẫn ngắt dòng.
 
-> This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can _put_ **Markdown** into a blockquote.
+> Đây là một dòng rất dài nhưng vẫn sẽ được trích dẫn đúng khi xuống dòng. Ôi trời, hãy tiếp tục viết để đảm bảo dòng này đủ dài để xuống dòng cho tất cả mọi người. À, bạn có thể _đưa_ **Markdown** vào một khối trích dẫn.
 
 ## Horizontal Rule
 
-Three or more...
+Ba hoặc nhiều hơn...
 
 ```markdown
 ---
@@ -334,25 +333,25 @@ Underscores
 ## Line Breaks
 
 ```markdown
-Here's a line for us to start with.
+Đây là một dòng để chúng ta bắt đầu.
 
-This line is separated from the one above by two newlines, so it will be a _separate paragraph_.
+Dòng này được phân cách với dòng trên bằng hai dòng mới, nên nó sẽ là một _đoạn văn riêng_.
 
-This line is also a separate paragraph, but...
-This line is only separated by a single newline, so it's a separate line in the _same paragraph_.
+Dòng này cũng là một đoạn văn riêng, nhưng...
+Dòng này chỉ được phân cách bằng một dòng mới, nên nó là một dòng riêng trong _cùng một đoạn văn_.
 ```
 
-Here's a line for us to start with.
+Đây là một dòng để chúng ta bắt đầu.
 
-This line is separated from the one above by two newlines, so it will be a _separate paragraph_.
+Dòng này được phân cách với dòng trên bằng hai dòng mới, nên nó sẽ là một _đoạn văn riêng_.
 
-This line is also a separate paragraph, but...
-This line is only separated by a single newline, so it's a separate line in the _same paragraph_.
+Dòng này cũng là một đoạn văn riêng, nhưng...
+Dòng này chỉ được phân cách bằng một dòng mới, nên nó là một dòng riêng trong _cùng một đoạn văn_.
 
 ---
 
 ```markdown
-This is a regular paragraph.
+Đây là một đoạn văn thông thường.
 
 <table>
     <tr>
@@ -360,10 +359,10 @@ This is a regular paragraph.
     </tr>
 </table>
 
-This is another regular paragraph.
+Đây là một đoạn văn thông thường.
 ```
 
-This is a regular paragraph.
+Đây là một đoạn văn thông thường.
 
 <table>
     <tr>
@@ -371,24 +370,24 @@ This is a regular paragraph.
     </tr>
 </table>
 
-This is another regular paragraph.
+Đây là một đoạn văn thông thường khác.
 
 ## Youtube videos
 
 ```markdown
-<a href="https://www.youtube.com/watch?feature=player_embedded&v=ARted4RniaU
-" target="_blank"><img src="https://img.youtube.com/vi/ARted4RniaU/0.jpg"
+<a href="https://www.youtube.com/watch?v=7c8p0pRxZHM
+" target="_blank"><img src="https://img.youtube.com/vi/7c8p0pRxZHM/hqdefault.jpg"
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
-Pure markdown version:
+Phiên bản markdown thuần túy:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ARted4RniaU/0.jpg)](https://www.youtube.com/watch?v=ARted4RniaU)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/7c8p0pRxZHM/hqdefault.jpg)](https://www.youtube.com/watch?v=7c8p0pRxZHM)
 ```
 
-<a href="https://www.youtube.com/watch?feature=player_embedded&v=ARted4RniaU
-" target="_blank"><img src="https://img.youtube.com/vi/ARted4RniaU/0.jpg"
+<a href="https://www.youtube.com/watch?v=7c8p0pRxZHM
+" target="_blank"><img src="https://img.youtube.com/vi/7c8p0pRxZHM/hqdefault.jpg"
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
-Pure markdown version:
+Phiên bản markdown thuần túy:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ARted4RniaU/0.jpg)](https://www.youtube.com/watch?v=ARted4RniaU)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/7c8p0pRxZHM/hqdefault.jpgg)](https://www.youtube.com/watch?v=7c8p0pRxZHM)

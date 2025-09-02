@@ -1,7 +1,9 @@
 ---
 title: Elements
-date: 2013-12-24
-tags: [elements, test]
+date: '2025-09-02'
+tags:
+  - elements
+  - test
 head:
   - - meta
     - name: description
@@ -11,7 +13,7 @@ head:
       content: vitepress theme bluearchive Elements
 ---
 
-The purpose of this post is to help you make sure all of HTML elements can display properly. If you use CSS reset, don't forget to redefine the style by yourself.
+Mục đích của bài viết này là giúp bạn đảm bảo tất cả các phần tử HTML đều hiển thị đúng. Nếu bạn sử dụng CSS Reset, đừng quên tự mình định nghĩa lại kiểu.
 
 ---
 
@@ -43,7 +45,7 @@ Maecenas ornare arcu at mi suscipit, non molestie tortor ultrices. Aenean conval
 
 ### Definition List (dl)
 
-<dl><dt>Definition List Title</dt><dd>This is a definition list division.</dd></dl>
+<dl><dt>Tiêu đề danh sách định nghĩa</dt><dd>Đây là phần danh sách định nghĩa.</dd></dl>
 
 ### Ordered List (ol)
 

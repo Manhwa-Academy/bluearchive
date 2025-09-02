@@ -3,6 +3,7 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import { fileURLToPath } from 'url'
 import { createMarkdownRenderer } from 'vitepress'
+
 // ES模块需要重新声明常量
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -27,24 +28,20 @@ interface Post {
 // Post数据缓存
 const cache: Map<string, { timestamp: number; post: Post }> = new Map()
 
+// ✅ Hàm tính số từ chính xác
 function countWords(text: string): number {
-  // 将连续的英文字母串替换为单个字母
-  const replacedText = text.replace(/[a-zA-Z]+/g, 'A')
-
-  const pattern = /[\u4E00-\u9FA5A]/g
-  const matches = replacedText.match(pattern)
-
-  let count = 0
-  if (matches) {
-    count = matches.length
-  }
-  return count
+  const plainText = text.replace(/<[^>]+>/g, '') // Loại bỏ thẻ HTML nếu có
+  // Bắt tất cả các từ, kể cả tiếng Việt, Trung, số, chữ latin có dấu
+  const words = plainText.match(/\p{L}[\p{L}\p{Mn}\p{Pd}']*/gu)
+  return words ? words.length : 0
 }
 
+// Tạo Post object từ file
 function getPost(md: any, file: string, postDir: string): Post {
   const fullPath = path.join(postDir, file)
   const timestamp = Math.floor(fs.statSync(fullPath).mtimeMs)
-  // 缓存直接返回
+
+  // Trả cache nếu tồn tại
   const cached = cache.get(fullPath)
   if (cached && timestamp === cached.timestamp) {
     return cached.post
@@ -52,18 +49,22 @@ function getPost(md: any, file: string, postDir: string): Post {
 
   const src = fs.readFileSync(fullPath, 'utf-8')
   const { data, excerpt, content } = matter(src, { excerpt: true })
+
   const post: Post = {
     id: id++,
     title: data.title,
     content: content,
     href: `posts/${file.replace(/\.md$/, '.html')}`,
     create: +(new Date(data.date) || timestamp),
-    update: timestamp,
+
+    // 🕒 update là thời gian build
+    update: Date.now(),
+
     tags: data.tags,
-    wordCount: countWords(content),
+    wordCount: countWords(content), // <-- Gọi hàm đúng ở đây
     cover: data.cover,
     excerpt: excerpt,
-    pinned: !!data.pinned
+    pinned: !!data.pinned,
   }
 
   cache.set(fullPath, { timestamp, post })
@@ -79,7 +80,7 @@ async function load() {
     .filter((file) => file.endsWith('.md') && file !== 'index.md')
     .map((file) => getPost(md, file, postDir))
     .sort((a, b) => {
-      // 先按置顶排序,再按创建时间排序
+      // 先按置顶排序，再按创建时间排序
       if (a.pinned && !b.pinned) return -1
       if (!a.pinned && b.pinned) return 1
       return b.create - a.create

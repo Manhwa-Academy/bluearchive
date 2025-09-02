@@ -1,7 +1,9 @@
 ---
-title: Latex公式测试
-date: 2020-01-01
-tags: [Latex, test]
+title: Kiểm tra công thức Latex
+date: '2025-09-02'
+tags:
+  - Latex
+  - test
 head:
   - - meta
     - name: description
@@ -11,7 +13,7 @@ head:
       content: vitepress theme bluearchive Latex公式测试
 ---
 
-Latex 公式测试
+Kiểm tra công thức Latex
 
 ---
 

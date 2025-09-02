@@ -1,25 +1,23 @@
 ---
 title: Code Highlight Style test
-date: 2019-07-25
+date: '2025-09-02'
 tags:
-  [
-    rust,
-    json,
-    python,
-    html,
-    javascript,
-    cpp,
-    sql,
-    objectivec,
-    java,
-    swift,
-    css,
-    ruby,
-    makefile,
-    go,
-    bash,
-    ini,
-  ]
+  - rust
+  - json
+  - python
+  - html
+  - javascript
+  - cpp
+  - sql
+  - objectivec
+  - java
+  - swift
+  - css
+  - ruby
+  - makefile
+  - go
+  - bash
+  - ini
 head:
   - - meta
     - name: description
@@ -29,7 +27,7 @@ head:
       content: vitepress theme bluearchive Code Highlight Style test
 ---
 
-Make sure all the code blocks highlighted correctly. All the code samples are come from the demo of https://highlightjs.org
+Hãy đảm bảo tất cả các khối mã được tô sáng chính xác. Tất cả các mã mẫu đều được lấy từ bản demo của https://highlightjs.org
 
 ---
 

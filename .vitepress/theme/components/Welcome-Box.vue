@@ -14,7 +14,7 @@
           background: `linear-gradient(${angle}deg, var(--infobox-background-initial), var(--infobox-background-final))`,
         }"
       >
-        <img @dragstart.prevent src="../assets/banner/avatar.webp" alt="" class="avatar" />
+        <img @dragstart.prevent src="../assets/banner/hikari-shupogaki.gif" alt="" class="avatar" />
         <span class="name">{{ name }}</span>
         <span class="motto">
           {{ mottoText }}

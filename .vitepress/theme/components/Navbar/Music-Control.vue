@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-const isPlaying = ref(false) // 音乐播放状态
+const isPlaying = ref(false) // Trạng thái phát nhạc
 const music = ref<HTMLAudioElement | null>(null)
 
 const toggleMusic = () => {
@@ -15,7 +15,7 @@ const toggleMusic = () => {
     if (isPlaying.value) {
       music.value.pause()
     } else {
-      music.value.play().catch((err) => console.log('播放失败: ', err))
+      music.value.play().catch((err) => console.log('Phát nhạc thất bại: ', err))
     }
     isPlaying.value = !isPlaying.value
   }
@@ -24,11 +24,22 @@ const toggleMusic = () => {
 onMounted(() => {
   music.value = document.getElementById('background-music') as HTMLAudioElement
   if (music.value) {
-    music.value.volume = 0.3 // 设置音量为30%
-    music.value.pause() // 初始状态为暂停
+    music.value.volume = 1 // Âm lượng 100%
+    music.value.pause() // Tạm dừng để chắc chắn trạng thái ban đầu
+
+    // Thử tự động phát nhạc khi trang tải
+    music.value.play()
+      .then(() => {
+        isPlaying.value = true
+      })
+      .catch((err) => {
+        // Nếu trình duyệt chặn autoplay, giữ nguyên isPlaying = false
+        console.log('Tự động phát nhạc bị chặn:', err)
+      })
   }
 })
 </script>
+
 <style scoped lang="less">
 .iconfont {
   display: flex;

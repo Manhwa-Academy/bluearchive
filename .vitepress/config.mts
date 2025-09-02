@@ -39,28 +39,28 @@ export default defineConfigWithTheme<ThemeConfig>({
     hostname: 'https://manhwa-academy.github.io/bluearchive/',
   },
   
-  title: "Sensei's 部落格",
-  description: "Sensei's 部落格",
+  title: "Blog của Sensei",
+  description: "Blog của Sensei",
   themeConfig: {
     menuList: [
-      { name: '首页', url: '/' }, // Trang chủ
-      { name: '标签', url: '/tags/' }, // Trang tags
+      { name: 'Trang chủ', url: '/' }, // Trang chủ
+      { name: 'Thẻ', url: '/tags/' }, // Trang tags
     ],
     videoBanner: false,
-    name: "Sensei's 部落格",
-    welcomeText: 'Hello, VitePress',
-    motto: ['和你的日常，就是奇迹', '何気ない日常で、ほんの少しの奇跡を見つける物語。'],
+    name: "Blog của Sensei",
+    welcomeText: 'Hello, Sensei',
+    motto: ['Sản phẩm mà chúng tôi ba người tạo ra, mang đến những phép màu nhỏ cho cuộc sống của bạn.'],
     social: [
-      { icon: 'github', url: 'https://github.com/' },
-      { icon: 'bilibili', url: 'https://www.bilibili.com/' },
-      { icon: 'qq', url: 'https://im.qq.com/index/' },
-      { icon: 'wechat', url: 'https://weixin.qq.com/' },
+      { icon: 'github', url: 'https://github.com/Manhwa-Academy/bluearchive' },
+      { icon: 'bilibili', url: 'https://www.facebook.com/Shiroko412' },
+      { icon: 'qq', url: 'https://zalo.me/0332138297' },
+      { icon: 'wechat', url: 'mailto:vuliztva1@gmail.com' },
     ],
     spineVoiceLang: 'jp',
     footerName: 'Sensei',
     poweredList: [
-      { name: 'VitePress', url: 'https://github.com/vuejs/vitepress' },
-      { name: 'GitHub Pages', url: 'https://docs.github.com/zh/pages' },
+      { name: 'Manhwa-Acedemy', url: 'https://github.com/Manhwa-Academy' },
+      { name: 'GitHub ', url: 'https://github.com/Manhwa-Academy/bluearchive' },
     ],
     clientID: 'Ov23lia9U9wFN3WMyoKK',
     clientSecret: 'b2418ab598c188c43a247c99e728dd2735d58c3b',

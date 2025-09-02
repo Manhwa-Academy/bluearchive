@@ -1,17 +1,17 @@
 <template>
   <div class="post-banner" v-show="state.currPost.title">
     <h1 class="title">{{ state.currPost.title }}</h1>
-    <span class="status"
-      >发布于
+    <span class="status">
+      Đăng vào
       {{
-        Intl.DateTimeFormat('zh-CN', {
+        Intl.DateTimeFormat('vi-VN', {
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
         }).format(new Date(state.currPost.create))
       }}
-      | 约{{ state.currPost.wordCount }}字</span
-    >
+      | Khoảng {{ state.currPost.wordCount }} chữ
+    </span>
   </div>
 </template>
 <script setup lang="ts">

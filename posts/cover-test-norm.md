@@ -1,12 +1,11 @@
 ---
-title: Cover test 1
-
-date: 2025-5-11
-
-tags: [image]
-
+title: Hoàng Kiều Phong
+date: '2025-09-02'
+pinned: true
+tags:
+  - image
 cover: /wallpaper-2572384.webp
 ---
-This is a cover test post.
+Thông tin cá nhân.
 
 ---

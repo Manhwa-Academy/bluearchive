@@ -24,13 +24,13 @@
               <div class="time-info">
                 <time datetime="">{{ formatDate(post.create) }}</time>
               </div>
-              <div class="wordcount seperator">约{{ post.wordCount }}字</div>
+              <div class="wordcount seperator">Khoảng {{ post.wordCount }} chữ</div>
             </div>
             <ul class="tags">
-              <li v-for="tag in post.tags">
-                <a :href="`${base}tags/`" @click="state.currTag = tag"
-                  ><i class="iconfont icon-tag"></i> {{ tag }}</a
-                >
+              <li v-for="tag in post.tags" :key="tag">
+                <a :href="`${base}tags/`" @click="state.currTag = tag">
+                  <i class="iconfont icon-tag"></i> {{ tag }}
+                </a>
               </li>
             </ul>
             <div class="excerpt">
@@ -95,11 +95,19 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+function calculateWordCount(text: string): number {
+  const plainText = text.replace(/<[^>]*>/g, ''); // Loại bỏ HTML tags
+  const words = plainText.match(/[\p{L}\p{N}_]+/gu); // Đếm từ
+  return words ? words.length : 0;
+}
+
 import { useData } from 'vitepress'
 import { ref, computed, onMounted, watch } from 'vue'
 import { data as posts } from '../utils/posts.data'
 import { useStore } from '../store'
+
 const { state } = useStore()
 const { page, site } = useData()
 const base = site.value.base
@@ -108,8 +116,17 @@ function resolveAssetPath(path: string) {
   const normalizedBase = base.endsWith('/') ? base : base + '/'
   return normalizedBase + path.replace(/^\//, '')
 }
-// 日期格式化
-function formatDate(timestamp: number): string {
+
+// 日期格式化 - format timestamp number thành ngày tháng
+function formatDate(create: any): string {
+  let timestamp: number
+  if (typeof create === 'number') {
+    timestamp = create
+  } else {
+    const date = new Date(create)
+    timestamp = date.getTime()
+  }
+  if (isNaN(timestamp)) return ''
   const date = new Date(timestamp)
   return new Intl.DateTimeFormat('zh-CN', {
     year: 'numeric',
@@ -118,16 +135,38 @@ function formatDate(timestamp: number): string {
   }).format(date)
 }
 
-// 文章传值
-const finalPosts = computed(() => {
-  if (page.value.filePath === 'index.md') {
-    return posts
-  } else if (page.value.filePath === 'tags/index.md') {
-    return state.selectedPosts
-  }
-  return []
-})
+// Lấy và xử lý create date dạng timestamp số
+function getTimestamp(create: any): number {
+  if (typeof create === 'number') return create
+  const date = new Date(create)
+  if (!isNaN(date.getTime())) return date.getTime()
+  return 0
+}
 
+// 文章传值 - sort theo pinned rồi mới theo create timestamp
+const finalPosts = computed(() => {
+  const rawPosts =
+    page.value.filePath === 'index.md'
+      ? posts
+      : page.value.filePath === 'tags/index.md'
+      ? state.selectedPosts
+      : []
+
+  return rawPosts.slice().sort((a, b) => {
+    // Ưu tiên bài có "pinned: true"
+    if (a.pinned && !b.pinned) return -1
+    if (!a.pinned && b.pinned) return 1
+
+    // Bài có title là "hello" luôn đứng đầu
+    if (a.title === 'HelloWorld') return -1
+    if (b.title === 'HelloWorld') return 1
+    // Sắp xếp theo create timestamp giảm dần
+    const timeA = getTimestamp(a.create)
+    const timeB = getTimestamp(b.create)
+
+    return timeB - timeA
+  })
+})
 // 文章列表长度
 const pageSize = ref(5)
 
@@ -214,10 +253,15 @@ const showRightEllipsis = computed(() => {
   )
 })
 const postsList = computed(() => {
-  return finalPosts.value.slice(
-    (currPage.value - 1) * pageSize.value,
-    currPage.value * pageSize.value,
-  )
+  return finalPosts.value
+    .slice(
+      (currPage.value - 1) * pageSize.value,
+      currPage.value * pageSize.value,
+    )
+    .map(post => ({
+      ...post,
+      wordCount: calculateWordCount(post.content || ''),
+    }));
 })
 const totalPage = computed(() => {
   return Math.ceil(finalPosts.value.length / pageSize.value) || 1
@@ -247,6 +291,7 @@ watch(
   },
 )
 </script>
+
 <style scoped lang="less">
 .list-move,
 .list-enter-active,
@@ -355,262 +400,135 @@ watch(
         padding: 24px 20px 0;
 
         .cover-container {
-          flex: none;
           width: 100%;
-          height: 240px;
+          height: 160px;
           margin-left: 0;
+          margin-bottom: 15px;
         }
       }
     }
   }
-}
-
-.post-header {
-  padding: 32px 40px 0;
-
   .title {
-    position: relative;
-    margin-bottom: 8px;
-
     .title-dot {
-      width: 4px;
-      height: 20px;
       position: absolute;
-      left: -16px;
-      top: 9.5px;
-      background: var(--pot-border-left);
-      border-radius: 2px;
-      transition: background 0.5s;
+      left: -18px;
+      top: 15px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--pot-primary);
     }
-
     .name {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    a {
-      color: var(--font-color-grey);
-      transition: text-shadow 0.5s, color 0.5s;
-
-      &:hover {
-        text-shadow: 0 0 3px var(--font-color-grey);
+      font-weight: 700;
+      font-size: 1.75rem;
+      a {
+        color: var(--text-color);
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
 
   .meta-info-bar {
     display: flex;
-    margin-bottom: 7px;
-    opacity: 0.75;
-
-    .time {
+    align-items: center;
+    gap: 12px;
+    .iconfont {
+      &.icon-time {
+        font-size: 14px;
+        color: var(--pot-primary);
+      }
+      &.icon-tag {
+        font-size: 14px;
+      }
+    }
+    .time-info {
       font-size: 13px;
-      color: var(--font-color-grey);
-      margin: 3px 2px 0 0;
-      font-weight: bold;
+      color: var(--pot-primary);
+      user-select: none;
     }
-
-    .seperator::before {
-      content: '';
-      display: inline-block;
-      border-radius: 50%;
-      height: 4px;
-      width: 4px;
-      vertical-align: middle;
-      background-color: var(--font-color-grey);
-      margin: 0 16px;
-    }
-  }
-}
-
-.tags {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 0;
-  margin-bottom: 6px;
-
-  li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 6px;
-    margin-right: 16px;
-
-    a {
-      color: var(--font-color-grey);
-      padding: 3px 5px;
-      color: var(--font-color-gold);
-      background-color: var(--btn-background);
-      border-radius: 5px;
-      transition: all 0.5s;
-
-      &:hover {
-        background-color: var(--btn-hover);
-        color: var(--font-color-gold);
-      }
-    }
-  }
-}
-
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 50px;
-  padding: 0;
-
-  button {
-    background-color: transparent;
-    border-style: none;
-    cursor: pointer;
-  }
-
-  .hide {
-    opacity: 0;
-    cursor: auto;
-  }
-
-  .icon-arrow {
-    font-size: 36px;
-    color: var(--icon-color);
-  }
-
-  #up {
-    animation: arrow-pre 1s ease-in-out infinite alternate;
-  }
-
-  #next {
-    animation: arrow-next 1s ease-in-out infinite alternate;
-  }
-
-  .page-numbers {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .page-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-    border-radius: 6px;
-    color: var(--icon-color);
-    transition: all 0.3s;
-
-    &:hover {
-      background-color: var(--btn-hover);
-      color: var(--font-color-gold);
-    }
-
-    &.active {
-      background-color: var(--btn-hover);
-      color: var(--font-color-gold);
-      font-weight: bold;
-    }
-  }
-
-  .ellipsis {
-    margin: 0 4px;
-    color: var(--icon-color);
-  }
-}
-
-@keyframes arrow-pre {
-  from {
-    transform: translateX(0) rotate(-0.25turn);
-  }
-
-  to {
-    transform: translateX(10px) rotate(-0.25turn);
-  }
-}
-
-@keyframes arrow-next {
-  from {
-    transform: translateX(0) rotate(0.25turn);
-  }
-
-  to {
-    transform: translateX(-10px) rotate(0.25turn);
-  }
-}
-
-@media (max-width: 768px) {
-  .posts-list {
-    .post {
-      margin: 0 8px 30px 8px;
-      background-size: cover;
-      border-left: solid 1.5vh var(--pot-border-left);
-      .pinned {
-        width: 27px;
-        height: 27px;
-        top: -2px;
-        right: 12px;
+    .wordcount {
+      font-size: 13px;
+      user-select: none;
+      &.seperator::before {
+        content: '·';
+        margin: 0 6px;
+        color: var(--pot-primary);
       }
     }
   }
 
-  .post-header {
-    padding: 20px 35px 0;
-    .name {
-      font-size: 24px;
-    }
-    .title {
-      margin-bottom: 6px;
-
-      .title-dot {
-        height: 18px;
-        top: 6px;
-      }
-    }
-    .meta-info-bar {
-      margin-bottom: 4px;
-      font-size: 12px;
-      .time {
-        font-size: 8px !important;
-        margin: 3px 2px 0 0 !important;
-      }
-      .seperator::before {
-        margin: 0 8px;
-      }
-    }
-  }
   .tags {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 12px;
+    list-style: none;
+    font-size: 12px;
+    font-weight: 400;
+
     li {
-      padding-top: 4px;
-      margin-right: 8px;
       a {
-        font-size: 12px;
-        padding: 4px 6px;
-        .icon-tag {
-          font-size: 12px;
+        color: var(--text-color);
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 14px;
+        background-color: var(--pot-bg-gray);
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &:hover {
+          background-color: var(--pot-bg-primary);
+          color: var(--pot-primary);
+        }
+        i {
+          margin-right: 4px;
+          font-size: 14px;
+          line-height: 14px;
         }
       }
     }
   }
-  .excerpt {
-    padding: 0 36px;
-    margin-bottom: 4px;
-    font-size: 12px;
+
+  .excerpt p {
+    color: var(--text-color-light);
   }
-  .pagination {
-    margin-top: 32px;
-    .icon-arrow {
-      font-size: 32px;
+}
+
+.pagination {
+  margin: 50px auto 60px;
+  max-width: 600px;
+  text-align: center;
+  user-select: none;
+  button {
+    cursor: pointer;
+    padding: 8px 15px;
+    margin: 0 3px;
+    font-size: 14px;
+    border-radius: 3px;
+    border: none;
+    background: var(--pot-bg-gray);
+    color: var(--text-color);
+    transition: all 0.3s;
+    &.active {
+      background: var(--pot-primary);
+      color: #fff;
+      cursor: default;
     }
-    .page-number {
-      width: 28px;
-      height: 28px;
-      font-size: 14px;
+    &:disabled {
+      cursor: default;
+      opacity: 0.6;
     }
-    .page-numbers {
-      gap: 4px;
+    &.hide {
+      display: none;
     }
+  }
+  .ellipsis {
+    margin: 0 6px;
+    user-select: none;
   }
 }
 </style>

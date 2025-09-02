@@ -1,7 +1,8 @@
 ---
 title: Images
-date: 2013-12-26
-tags: [image]
+date: '2025-09-02'
+tags:
+  - image
 head:
   - - meta
     - name: description
@@ -11,12 +12,12 @@ head:
       content: vitepress theme bluearchive Images
 ---
 
-This is an image test post.
+Đây là bài đăng thử nghiệm hình ảnh.
 
 ---
 
 ::: tip
-img 标签的图片灯箱效果需要加入属性选择器：
+"Hiệu ứng hộp đèn (lightbox) cho hình ảnh trong thẻ img cần thêm bộ chọn thuộc tính (attribute selector)"
 
 ```md
 <img src="/bluearchive/shiroko.png" data-fancybox="gallery"/>

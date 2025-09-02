@@ -1,7 +1,10 @@
 ---
 title: Tags
-date: 2013-12-24 23:29:53
-tags: [Foo, Bar, Baz]
+date: '2025-09-02'
+tags:
+  - Foo
+  - Bar
+  - Baz
 head:
   - - meta
     - name: description
@@ -11,6 +14,6 @@ head:
       content: vitepress theme bluearchive Tags
 ---
 
-This post contains 3 tags. Make sure your theme can display all of the tags.
+Bài viết này có 3 thẻ. Hãy đảm bảo chủ đề của bạn có thể hiển thị tất cả các thẻ.
 
 ---

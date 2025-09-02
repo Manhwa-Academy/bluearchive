@@ -1,12 +1,12 @@
 <template>
     <div class="toggle-container">
       <div class="theme-select">
-        <span class="label">主题</span>
+        <span class="label">Chủ đề</span>
         <div class="select-wrapper">
           <select v-model="selectedTheme" @change="changeTheme">
             <option value="light">Arona</option>
             <option value="dark">Plana</option>
-            <option value="system">System</option>
+            <option value="system">Mặc định</option>
           </select>
           <span class="select-arrow">▼</span>
         </div>
@@ -32,8 +32,8 @@
   const selectedTheme = ref('system')
   
   const toggles = {
-      fireworksEnabled: '烟花',
-      SpinePlayerEnabled: 'Spine',
+      fireworksEnabled: 'Hiệu ứng pháo hoa',
+      SpinePlayerEnabled: 'Nhân vật chuyển động',
   }
   
   let darkModeMediaQuery: MediaQueryList
