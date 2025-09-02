@@ -1,10 +1,10 @@
 ---
-title: HelloWorld
+title: Xin chào thế giới
 date: '2025-09-02'
 tags:
   - HelloWorld
   - vue
-  - vitepress
+  - bluearchive
 pinned: true 
 head:
   - - meta
@@ -19,13 +19,13 @@ Xin chào Thế Giới!
 
 ---
 
-# Markdown Extension Examples
+# Ví dụ về tiện ích mở rộng Markdown
 
-This page demonstrates some of the built-in markdown extensions provided by VitePress.
+Trang này giới thiệu một số tiện ích mở rộng Markdown tích hợp sẵn do VitePress cung cấp.
 
-## Syntax Highlighting
+## Tô sáng cú pháp
 
-VitePress provides Syntax Highlighting powered by [Shiki](https://github.com/shikijs/shiki), with additional features like line-highlighting:
+VitePress cung cấp tính năng Tô sáng cú pháp được hỗ trợ bởi [Shiki](https://github.com/shikijs/shiki), cùng các tính năng bổ sung như tô sáng dòng:
 
 **Input**
 
@@ -53,54 +53,54 @@ export default {
 }
 ```
 
-## Custom Containers
+## Container tùy chỉnh
 
 **Input**
 
 ```md
-::: info
-This is an info box.
+::: thông tin
+Đây là hộp thông tin.
 :::
 
-::: tip
-This is a tip.
+::: mẹo
+Đây là mẹo.
 :::
 
-::: warning
-This is a warning.
+::: cảnh báo
+Đây là cảnh báo.
 :::
 
-::: danger
-This is a dangerous warning.
+::: nguy hiểm
+Đây là cảnh báo nguy hiểm.
 :::
 
-::: details
-This is a details block.
+::: chi tiết
+Đây là khối chi tiết.
 :::
 ```
 
 **Output**
 
-::: info
-This is an info box.
+::: thông tin
+Đây là hộp thông tin.
 :::
 
-::: tip
-This is a tip.
+::: mẹo
+Đây là mẹo.
 :::
 
-::: warning
-This is a warning.
+::: cảnh báo
+Đây là cảnh báo.
 :::
 
-::: danger
-This is a dangerous warning.
+::: nguy hiểm
+Đây là cảnh báo nguy hiểm.
 :::
 
-::: details
-This is a details block.
+::: chi tiết
+Đây là khối chi tiết.
 :::
 
-## More
+## Xem thêm
 
-Check out the documentation for the [full list of markdown extensions](https://vitepress.dev/guide/markdown).
+Xem tài liệu để biết [danh sách đầy đủ các tiện ích mở rộng markdown](https://vitepress.dev/guide/markdown).

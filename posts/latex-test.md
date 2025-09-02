@@ -17,11 +17,10 @@ Kiểm tra công thức Latex
 
 ---
 
-When $a \ne 0$, there are two solutions to $(ax^2 + bx + c = 0)$ and they are
+Khi $a \ne 0$, có hai nghiệm của $(ax^2 + bx + c = 0)$ và chúng là
 $$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
 
-**Maxwell's equations:**
-
+**Phương trình Maxwell:**
 | equation                                                                                                                                                                  | description                                                                            |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | $\nabla \cdot \vec{\mathbf{B}}  = 0$                                                                                                                                      | divergence of $\vec{\mathbf{B}}$ is zero                                               |

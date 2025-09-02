@@ -1,12 +1,17 @@
 <template>
   <ul class="tags">
-    <li :class="['item', { active: active === tag }]" v-for="(_, tag) in tagData">
-      <a href="javascript:void(0)" @click="setTag(tag)"
-        ><i class="iconfont icon-tag"></i> {{ tag }}</a
-      >
+    <li
+      :class="['item', { active: active === tag }]"
+      v-for="(_, tag) in tagData"
+      :key="tag"
+    >
+      <a href="javascript:void(0)" @click="setTag(tag)">
+        <i class="iconfont icon-tag"></i> {{ tag }}
+      </a>
     </li>
   </ul>
 </template>
+
 <script setup lang="ts">
 import { data as posts, type PostData } from '../utils/posts.data'
 import { ref, watch, onUnmounted, onMounted } from 'vue'
@@ -23,14 +28,12 @@ const setTag = (tag: string) => {
 
   const url = new URL(window.location.href)
 
-  // 设置URL的tag参数
   if (tag && tag.trim() !== '') {
     url.searchParams.set('tag', tag)
   } else {
     url.searchParams.delete('tag')
   }
 
-  // 清除page参数
   const pageParam = url.searchParams.get('page')
   if (!pageParam || pageParam === '1') {
     url.searchParams.delete('page')
@@ -47,7 +50,6 @@ for (const post of posts) {
   }
 }
 
-// 从URL获取tag
 function getTagFromUrl(): string {
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search)
@@ -59,10 +61,8 @@ function getTagFromUrl(): string {
   return state.currTag || ''
 }
 
-// 挂载组件时获取URL的tag
 onMounted(() => {
   const tagFromUrl = getTagFromUrl()
-
   if (tagFromUrl) {
     setTag(tagFromUrl)
   } else if (state.currTag) {
@@ -83,13 +83,14 @@ watch(
     if (newTag !== active.value) {
       setTag(newTag)
     }
-  },
+  }
 )
 
 onUnmounted(() => {
   setTag('')
 })
 </script>
+
 <style scoped lang="less">
 .active a {
   background-color: var(--btn-hover) !important;
@@ -97,47 +98,57 @@ onUnmounted(() => {
 
 .tags {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
-  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   padding: 16px;
   background-color: var(--infobox-background-initial);
   border-radius: 32px;
   border: solid 2px var(--foreground-color);
   backdrop-filter: var(--blur-val);
-  width: 768px;
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  box-sizing: border-box;
   z-index: 100;
+}
 
-  li {
-    margin: 8px;
+.tags li {
+  list-style: none;
+}
 
-    a {
-      color: var(--font-color-grey);
-      padding: 3px 5px;
-      color: var(--font-color-gold);
-      background-color: var(--btn-background);
-      border-radius: 5px;
-      transition: background-color 0.5s;
+.tags li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 14px;
+  color: var(--font-color-gold);
+  background-color: var(--btn-background);
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
 
-      &:hover {
-        background-color: var(--btn-hover);
-      }
-    }
+  &:hover {
+    background-color: var(--btn-hover);
+  }
+
+  .icon-tag {
+    font-size: 14px;
   }
 }
 
 @media (max-width: 768px) {
   .tags {
-    width: auto;
-    li {
-      margin: 4px;
-      a {
-        font-size: 12px;
-        .icon-tag {
-          font-size: 12px;
-        }
-      }
+    padding: 12px;
+  }
+
+  .tags li a {
+    font-size: 12px;
+
+    .icon-tag {
+      font-size: 12px;
     }
   }
 }

@@ -1,5 +1,5 @@
 ---
-title: Code Highlight Style test
+title: Kiểm tra kiểu tô sáng mã
 date: '2025-09-02'
 tags:
   - rust

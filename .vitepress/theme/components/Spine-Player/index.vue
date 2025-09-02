@@ -49,7 +49,7 @@ const spineAssets = {
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_01.ogg`,
         animation: '12',
-        text: 'Anh về rồi à? Em đợi anh lâu lắm rồi.！'
+        text: 'Thầy về rồi à? Em đợi thầy lâu lắm rồi.！'
       },
       {
         audio: `/bluearchive/spine_assets/arona/audio/${spineVoiceLang}/arona_02.ogg`,
@@ -92,7 +92,7 @@ const spineAssets = {
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_02.ogg`,
         animation: '06',
-        text: 'Em hiểu rồi, \nThầy bây giờ không có việc gì làm, rất buồn chán。'
+        text: 'Em hiểu rồi, \nThầy bây giờ không có việc gì làm, rất là buồn chán。'
       },
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_01.ogg`,
@@ -113,7 +113,7 @@ const spineAssets = {
       {
         audio: `/bluearchive/spine_assets/plana/audio/${spineVoiceLang}/plana_05.ogg`,
         animation: '17',
-        text: 'Đợi thầy rất lâu rồi.'
+        text: 'Em đợi thầy rất lâu rồi.'
       },
     ]
   }

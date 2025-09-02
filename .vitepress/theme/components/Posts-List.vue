@@ -98,9 +98,9 @@
 
 <script setup lang="ts">
 function calculateWordCount(text: string): number {
-  const plainText = text.replace(/<[^>]*>/g, ''); // Loại bỏ HTML tags
-  const words = plainText.match(/[\p{L}\p{N}_]+/gu); // Đếm từ
-  return words ? words.length : 0;
+  const plainText = text.replace(/<[^>]*>/g, '') // Loại bỏ HTML tags
+  const words = plainText.match(/[\p{L}\p{N}_]+/gu) // Đếm từ
+  return words ? words.length : 0
 }
 
 import { useData } from 'vitepress'
@@ -158,8 +158,8 @@ const finalPosts = computed(() => {
     if (!a.pinned && b.pinned) return 1
 
     // Bài có title là "hello" luôn đứng đầu
-    if (a.title === 'HelloWorld') return -1
-    if (b.title === 'HelloWorld') return 1
+    if (a.title === 'Xin chào thế giới') return -1
+    if (b.title === 'Xin chào thế giới') return 1
     // Sắp xếp theo create timestamp giảm dần
     const timeA = getTimestamp(a.create)
     const timeB = getTimestamp(b.create)
@@ -254,14 +254,11 @@ const showRightEllipsis = computed(() => {
 })
 const postsList = computed(() => {
   return finalPosts.value
-    .slice(
-      (currPage.value - 1) * pageSize.value,
-      currPage.value * pageSize.value,
-    )
-    .map(post => ({
+    .slice((currPage.value - 1) * pageSize.value, currPage.value * pageSize.value)
+    .map((post) => ({
       ...post,
       wordCount: calculateWordCount(post.content || ''),
-    }));
+    }))
 })
 const totalPage = computed(() => {
   return Math.ceil(finalPosts.value.length / pageSize.value) || 1
@@ -322,30 +319,37 @@ watch(
 .posts-list {
   position: relative;
   overflow-wrap: break-word;
+  font-family: 'Be Vietnam Pro', 'Inter', 'Roboto', 'Noto Sans', sans-serif;
+  font-feature-settings: 'kern', 'liga', 'clig', 'calt';
+  letter-spacing: 0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   .post {
     display: flex;
     flex-direction: column;
-    margin: 0 0 50px 0;
+    margin-bottom: 50px;
     padding-bottom: 16px;
     background-color: var(--foreground-color);
     border-radius: 32px;
-    border-left: solid 16px var(--pot-border-left);
+    border-left: 16px solid var(--pot-border-left);
     background-image: var(--deco1);
     background-size: contain;
     background-position: right;
     background-repeat: no-repeat;
-    box-shadow: 0px 0px 8px rgb(var(--blue-shadow-color), 0.8);
+    box-shadow: 0 0 8px rgba(var(--blue-shadow-color), 0.8);
     transition: all 0.5s;
+    position: relative;
+
     .pinned {
       position: absolute;
-      width: 42px;
-      height: 42px;
       top: -8px;
       right: -8px;
-      border-radius: 50px;
-      background: var(--icon-pinned) no-repeat;
-      background-size: contain;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--icon-pinned) no-repeat center/contain;
       box-shadow: 0 0 6px rgba(var(--blue-shadow-color), 0.65);
     }
 
@@ -353,24 +357,25 @@ watch(
       display: flex;
       gap: 24px;
       padding: 32px 40px 0;
-      // flex-direction: row-reverse;
-      position: relative;
       align-items: stretch;
+      position: relative;
 
       .cover-container {
         flex: 0 0 180px;
         height: 140px;
         border-radius: 12px;
         overflow: hidden;
-        position: relative;
         margin-left: -8px;
         margin-bottom: 15px;
         align-self: center;
+        position: relative;
+
         .cover-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
+
           &:hover {
             transform: scale(1.05);
           }
@@ -380,15 +385,51 @@ watch(
       .header-content {
         flex: 1;
         min-width: 0;
+        display: flex;
         flex-direction: column;
+
         .title {
           position: relative;
           margin-bottom: 8px;
+
+          .name {
+            font-weight: 700;
+            font-size: 1.75rem;
+            a {
+              color: var(--text-color);
+              text-decoration: none;
+              font-family: inherit;
+              letter-spacing: inherit;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+
+          .title-dot {
+            position: absolute;
+            top: 15px;
+            left: -18px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--pot-primary);
+          }
         }
+
         .excerpt {
           flex: 1;
           display: flex;
           align-items: flex-end;
+
+          p {
+            color: var(--text-color-light);
+            font-family: inherit;
+            letter-spacing: inherit;
+            line-height: inherit;
+            margin: 0;
+          }
         }
       }
     }
@@ -408,50 +449,33 @@ watch(
       }
     }
   }
-  .title {
-    .title-dot {
-      position: absolute;
-      left: -18px;
-      top: 15px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--pot-primary);
-    }
-    .name {
-      font-weight: 700;
-      font-size: 1.75rem;
-      a {
-        color: var(--text-color);
-        text-decoration: none;
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
 
   .meta-info-bar {
     display: flex;
     align-items: center;
     gap: 12px;
+    font-family: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+
     .iconfont {
-      &.icon-time {
+      &.icon-time,
+      &.icon-tag {
         font-size: 14px;
         color: var(--pot-primary);
       }
-      &.icon-tag {
-        font-size: 14px;
-      }
     }
+
     .time-info {
       font-size: 13px;
       color: var(--pot-primary);
       user-select: none;
     }
+
     .wordcount {
       font-size: 13px;
       user-select: none;
+
       &.seperator::before {
         content: '·';
         margin: 0 6px;
@@ -461,9 +485,9 @@ watch(
   }
 
   .tags {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 15px 0;
     display: flex;
+    flex-wrap: wrap; /* Thêm dòng này */
     gap: 12px;
     list-style: none;
     font-size: 12px;
@@ -480,10 +504,12 @@ watch(
         text-decoration: none;
         cursor: pointer;
         transition: background-color 0.3s ease;
+
         &:hover {
           background-color: var(--pot-bg-primary);
           color: var(--pot-primary);
         }
+
         i {
           margin-right: 4px;
           font-size: 14px;
@@ -492,10 +518,6 @@ watch(
       }
     }
   }
-
-  .excerpt p {
-    color: var(--text-color-light);
-  }
 }
 
 .pagination {
@@ -503,6 +525,7 @@ watch(
   max-width: 600px;
   text-align: center;
   user-select: none;
+
   button {
     cursor: pointer;
     padding: 8px 15px;
@@ -513,19 +536,23 @@ watch(
     background: var(--pot-bg-gray);
     color: var(--text-color);
     transition: all 0.3s;
+
     &.active {
       background: var(--pot-primary);
       color: #fff;
       cursor: default;
     }
+
     &:disabled {
       cursor: default;
       opacity: 0.6;
     }
+
     &.hide {
       display: none;
     }
   }
+
   .ellipsis {
     margin: 0 6px;
     user-select: none;

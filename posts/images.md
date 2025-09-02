@@ -1,5 +1,5 @@
 ---
-title: Images
+title: Hình ảnh
 date: '2025-09-02'
 tags:
   - image
@@ -24,3 +24,20 @@ head:
 ![](/bluearchive/shiroko.png)
 <img src="/bluearchive/shiroko.png" data-fancybox="gallery"/> <img src="/bluearchive/shiroko.png" data-fancybox="gallery"/>
 ```
+
+---
+
+### Shiroko
+<img src="/wallpaper-2572384.webp" alt="Shiroko" width="300" height="auto" />
+
+---
+
+### Hoshino
+<img src="/wallpaper-878514.webp" alt="Hoshino" width="300" height="auto" />
+
+---
+
+### Hoshino swimsuit
+<img src="/wallpaper-2311325.webp" alt="Hoshino swimsuit" width="300" height="auto" />
+
+---

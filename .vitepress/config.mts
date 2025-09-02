@@ -38,18 +38,18 @@ export default defineConfigWithTheme<ThemeConfig>({
   sitemap: {
     hostname: 'https://manhwa-academy.github.io/bluearchive/',
   },
-  
-  title: "Blog của Sensei",
-  description: "Blog của Sensei",
+
+  title: 'Blog của Sensei',
+  description: 'Blog của Sensei',
   themeConfig: {
     menuList: [
-      { name: 'Trang chủ', url: '/' }, // Trang chủ
+      { name: 'Trang chủ', url: '' }, // Trang chủ (sử dụng trống thay vì '/')
       { name: 'Thẻ', url: '/tags/' }, // Trang tags
     ],
     videoBanner: false,
-    name: "Blog của Sensei",
+    name: 'Blog của Sensei',
     welcomeText: 'Hello, Sensei',
-    motto: ['Sản phẩm mà chúng tôi ba người tạo ra, mang đến những phép màu nhỏ cho cuộc sống của bạn.'],
+    motto: ['Con người chỉ là công cụ, chiến thắng là tất cả.'],
     social: [
       { icon: 'github', url: 'https://github.com/Manhwa-Academy/bluearchive' },
       { icon: 'bilibili', url: 'https://www.facebook.com/Shiroko412' },
@@ -67,5 +67,5 @@ export default defineConfigWithTheme<ThemeConfig>({
     repo: 'bluearchive',
     owner: 'Alittfre',
     admin: ['Alittfre'],
-  }
+  },
 })

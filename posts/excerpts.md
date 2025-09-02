@@ -1,5 +1,5 @@
 ---
-title: Excerpts
+title: Trích đoạn
 date: '2025-09-02'
 tags:
   - Excerpts

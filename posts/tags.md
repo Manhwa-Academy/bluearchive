@@ -1,5 +1,5 @@
 ---
-title: Tags
+title: Thẻ
 date: '2025-09-02'
 tags:
   - Foo

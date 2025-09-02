@@ -57,7 +57,7 @@ Ngoài ra, đối với H1 và H2, hãy sử dụng kiểu gạch chân:
 
 ## Alt-H2
 
-## Emphasis
+## Nhấn mạnh
 
 ````markdown
 Chữ nghiêng có thể được viết bằng dấu sao (\*) hoặc dấu gạch dưới (\_).
@@ -68,7 +68,7 @@ Bạn cũng có thể kết hợp chữ đậm và chữ nghiêng trong cùng m�
 
 Gạch bỏ chữ (như thế này) thì dùng hai dấu ngã (~~) ở đầu và cuối.
 
-## Lists
+## Danh sách
 
 ```markdown
 1. Mục đầu tiên trong danh sách có thứ tự
@@ -161,7 +161,7 @@ Và thêm một vài dòng nữa.
 
 </dl>
 
-## Links
+## Liên kết
 
 ```markdown
 [Tôi là một liên kết kiểu nội tuyến](https://www.facebook.com/Shiroko412)
@@ -200,19 +200,19 @@ Một số văn bản để cho thấy các liên kết tham chiếu có thể t
 [Văn bản tham chiếu không phân biệt chữ hoa chữ thường tùy ý]: https://goctruyentranhvui17.com/trang-chu
 [1]: https://goctruyentranhvui17.com/truyen/theo-doi
 [văn bản liên kết]: https://goctruyentranhvui17.com/
-## Images
+## Hình ảnh
 
 ```markdown
-hover to see the title text:
+di chuột để xem văn bản tiêu đề:
 
 Inline-style:
 
-![alt text](https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 1')
+![alt text](https://i0.wp.com/anitrendz.net/news/wp-content/uploads/2022/07/bluearchive_1.5anniversaryanimeshortscreenshot.png 'Logo Title Text 1')
 
-Reference-style:
+Phong cách tham khảo:
 ![alt text][logo]
 
-[logo]: https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 2'
+[logo]: https://i0.wp.com/anitrendz.net/news/wp-content/uploads/2022/07/bluearchive_1.5anniversaryanimeshortscreenshot.png 'Logo Title Text 2'
 ```
 
 di chuột để xem văn bản tiêu đề:
@@ -221,14 +221,14 @@ Inline-style:
 
 ![alt text]((https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 1')
 
-Reference-style:
+Phong cách tham khảo:
 ![alt text][logo]
 
 [logo]: (https://static.wikia.nocookie.net/blue-archive/images/f/fd/MP_JP_Pyroxene.png/revision/latest?cb=20220130135042 'Logo Title Text 2'
 
-## Code and Syntax Highlighting
+## Tô sáng Mã và Cú pháp
 
-Inline `code` has `back-ticks around` it.
+Inline `code` có `back-ticks around` it.
 
 ```javascript
 var s = 'JavaScript syntax highlighting'
@@ -245,7 +245,7 @@ Không có ngôn ngữ nào được chỉ định, nên không có cú pháp t�
 Nhưng hãy thêm một thẻ <b></b>.
 ```
 
-## Tables
+## Bảng
 
 ```markdown
 |                  | ASCII                           | HTML                          |
@@ -302,7 +302,7 @@ Trích dẫn ngắt dòng.
 
 > Đây là một dòng rất dài nhưng vẫn sẽ được trích dẫn đúng khi xuống dòng. Ôi trời, hãy tiếp tục viết để đảm bảo dòng này đủ dài để xuống dòng cho tất cả mọi người. À, bạn có thể _đưa_ **Markdown** vào một khối trích dẫn.
 
-## Horizontal Rule
+## Quy tắc ngang
 
 Ba hoặc nhiều hơn...
 
@@ -330,7 +330,7 @@ Asterisks
 
 Underscores
 
-## Line Breaks
+## Ngắt dòng
 
 ```markdown
 Đây là một dòng để chúng ta bắt đầu.
@@ -372,7 +372,7 @@ Dòng này chỉ được phân cách bằng một dòng mới, nên nó là m�
 
 Đây là một đoạn văn thông thường khác.
 
-## Youtube videos
+## Video trên Youtube
 
 ```markdown
 <a href="https://www.youtube.com/watch?v=7c8p0pRxZHM
@@ -390,4 +390,4 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 Phiên bản markdown thuần túy:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/7c8p0pRxZHM/hqdefault.jpgg)](https://www.youtube.com/watch?v=7c8p0pRxZHM)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/7c8p0pRxZHM/hqdefault.jpg)](https://www.youtube.com/watch?v=7c8p0pRxZHM)
