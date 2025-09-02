@@ -101,7 +101,8 @@ dist/
 
 # Serverless directories
 .serverless/
-
+.env
+.env.test
 # Temporary folders
 tmp/
 temp/

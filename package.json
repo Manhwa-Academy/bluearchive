@@ -24,7 +24,10 @@
   },
   "dependencies": {
     "animejs": "^3.2.2",
+    "axios": "^1.11.0",
     "crypto-browserify": "^3.12.1",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
     "gray-matter": "^4.0.3",
     "markdown-it-custom-attrs": "^1.0.2",
     "md5": "^2.3.0",
