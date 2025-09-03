@@ -16,10 +16,10 @@
       <div v-if="user">
         <div class="user-info">
           <img
-            :src="c.userAvatar || 'default-avatar-url'"
-            alt="Avatar"
+            :src="user?.photoURL || 'default-avatar-url'"
+            alt="User Avatar"
             class="comment-avatar"
-            @click="getGitHubInfo(c.userName)"
+            @click="getGitHubInfo"
           />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
           <button class="logout-button" @click="signOut">Đăng xuất</button>
@@ -240,11 +240,10 @@ async function submitComment() {
   }
 }
 async function getGitHubInfo(userName) {
-  console.log('Đang lấy thông tin GitHub cho:', userName) // Log tên người dùng
   try {
     const response = await fetch(`https://api.github.com/users/${userName}`)
     if (response.ok) {
-      githubUserInfo.value = await response.json() // Lưu thông tin GitHub
+      githubUserInfo.value = await response.json() // Lưu thông tin GitHub vào biến
     } else {
       alert('Không thể lấy thông tin GitHub.')
     }
@@ -490,7 +489,7 @@ textarea:disabled {
   height: 35px;
   border-radius: 50%;
   margin-right: 15px;
-  cursor: pointer; /* Thêm thuộc tính này để avatar có thể được nhấn */
+  cursor: pointer;  /* Thêm thuộc tính này để avatar có thể được nhấn */
 }
 .comment-content {
   display: flex;
