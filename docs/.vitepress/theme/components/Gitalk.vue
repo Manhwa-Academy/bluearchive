@@ -1,7 +1,7 @@
 <template>
   <div class="github-login-comment">
     <div v-if="!user" class="login-area">
-      <textarea v-model="comment" placeholder="Leave a comment" disabled></textarea>
+      <textarea v-model="comment" placeholder="Nhập bình luận..." disabled></textarea>
       <button class="login-button" @click="signInWithGitHub">Login with GitHub</button>
       <br /><br />
       <button class="preview-button" disabled>Preview</button>
@@ -65,8 +65,8 @@
             </div>
           </div>
 
-          <!-- Hiển thị câu trả lời lồng vào nhau -->
-          <ul v-if="c.replies && c.replies.length > 0">
+          <!-- Hiển thị các câu trả lời lồng vào nhau -->
+          <ul v-if="c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
                 <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
@@ -231,11 +231,12 @@ async function submitReply(parentId: string) {
       userId: user.value.uid,
       userName: user.value.displayName,
       userAvatar: user.value.photoURL,
-      text: replyText.value.trim(),
+      text: `@${user.value.displayName} ${replyText.value.trim()}`, // Thêm tên người trả lời vào câu trả lời
       createdAt: new Date(),
-      parentId: parentId, // Đây là phần quan trọng, lưu lại ID của bình luận gốc
-      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null,
+      parentId: parentId, // Trả lời bình luận nào
+      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Xử lý media nếu có
     })
+
     replyText.value = ''
     isReplyingToCommentId.value = null
   } catch (err) {
@@ -292,7 +293,6 @@ onMounted(() => {
       id: doc.id,
       ...doc.data(),
     }))
-
     // Gắn các câu trả lời vào mỗi bình luận
     comments.value.forEach((comment) => {
       comment.replies = comments.value.filter((c) => c.parentId === comment.id)
@@ -300,7 +300,6 @@ onMounted(() => {
   })
 })
 </script>
-
 <style scoped>
 .github-login-comment {
   max-width: 900px;
