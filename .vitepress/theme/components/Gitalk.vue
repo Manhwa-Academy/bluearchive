@@ -1,13 +1,15 @@
 <template>
   <div class="github-login-comment">
-    <div class="login-area">
-      <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
-      <button class="login-button" @click="signInWithGitHub" v-if="!user">Login with GitHub</button>
+    <div class="login-area" v-if="!user">
+      <!-- Hiển thị textbox và nút Login khi chưa đăng nhập -->
+      <textarea v-model="comment" placeholder="Nhập bình luận..." disabled></textarea>
+      <button class="login-button" @click="signInWithGitHub">Login with GitHub</button>
       <br /><br />
-      <button class="preview-button" :disabled="!comment.trim() || !user">Preview</button>
+      <button class="preview-button" :disabled="!comment.trim()">Preview</button>
     </div>
 
     <div class="comment-area" v-if="user">
+      <!-- Hiển thị khi đã đăng nhập -->
       <div class="user-info">
         <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="user-avatar" />
         <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
@@ -23,28 +25,23 @@
           type="text"
           placeholder="Insert image, gif, or video URL"
           @keydown.enter.prevent="embedMedia"
-          :disabled="!user"
         />
         <br /><br />
-        <button @click="embedMedia" :disabled="!user">Embed Media</button>
+        <button @click="embedMedia">Embed Media</button>
       </div>
       <br />
       <div class="button-group">
-        <button class="submit-button" @click="submitComment" :disabled="!comment.trim() || !user">
+        <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">
           Gửi bình luận
         </button>
-        <button class="preview-button" @click="togglePreview" :disabled="!comment.trim() || !user">
+        <button class="preview-button" @click="togglePreview" :disabled="!comment.trim()">
           Preview
         </button>
       </div>
 
       <h3>Bình luận đã gửi ({{ comments.length }}):</h3>
       <ul>
-        <li
-          v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
-          :key="index"
-          class="comment-item"
-        >
+        <li v-for="(c, index) in comments.filter((comment) => !comment.parentId)" :key="index" class="comment-item">
           <div class="comment">
             <img :src="c.userAvatar || 'default-avatar-url'" alt="Avatar" class="comment-avatar" />
             <div class="comment-content">
@@ -60,7 +57,6 @@
               </div>
 
               <div class="comment-actions">
-                <!-- Hiển thị nút Xóa chỉ nếu người dùng đã đăng nhập và là chủ sở hữu của bình luận -->
                 <button v-if="user?.uid === c.userId" @click="confirmDelete(c.id)">Xóa</button>
                 <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">Trả lời</button>
               </div>
@@ -71,11 +67,7 @@
           <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
-                <img
-                  :src="reply.userAvatar || 'default-avatar-url'"
-                  alt="Avatar"
-                  class="comment-avatar"
-                />
+                <img :src="reply.userAvatar || 'default-avatar-url'" alt="Avatar" class="comment-avatar" />
                 <div class="comment-content">
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
@@ -83,20 +75,13 @@
                   <!-- Render Media -->
                   <div v-if="reply.mediaUrl">
                     <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
-                    <video
-                      v-if="isVideo(reply.mediaUrl)"
-                      :src="reply.mediaUrl"
-                      controls
-                      class="media"
-                    ></video>
+                    <video v-if="isVideo(reply.mediaUrl)" :src="reply.mediaUrl" controls class="media"></video>
                     <img v-if="isGif(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
                   </div>
 
                   <div class="comment-actions">
                     <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">Xóa</button>
-                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
-                      Trả lời
-                    </button>
+                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">Trả lời</button>
                   </div>
                 </div>
               </div>
@@ -120,17 +105,14 @@
       <div v-if="isPreviewVisible" class="preview-box">
         <h4>Preview:</h4>
         <div class="preview-content">
-          <img
-            :src="user?.photoURL || 'default-avatar-url'"
-            alt="User Avatar"
-            class="preview-avatar"
-          />
+          <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="preview-avatar" />
           <p>{{ previewText }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 
 <script setup lang="ts">
