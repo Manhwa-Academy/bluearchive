@@ -22,12 +22,14 @@ const replyText = ref('');
 
 function submitReply() {
   if (replyText.value.trim()) {
+    // Phát ra sự kiện submitReply và truyền dữ liệu trả lời
     emit('submitReply', replyText.value);
-    replyText.value = '';
+    replyText.value = ''; // Reset khi gửi
   }
 }
 
 function cancelReply() {
+  // Phát ra sự kiện cancelReply để hủy trả lời
   emit('cancelReply');
 }
 </script>
