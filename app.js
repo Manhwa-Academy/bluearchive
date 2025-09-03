@@ -1,73 +1,83 @@
+// Sử dụng `import` thay vì `require`
 import express from 'express'
-import axios from 'axios'
+import passport from 'passport'
+import session from 'express-session'
+import GitHubStrategy from 'passport-github2'
 import dotenv from 'dotenv'
 
-dotenv.config() // Tải các biến môi trường từ .env
+dotenv.config()
 
 const app = express()
 
-// Route cho trang chủ (homepage)
+// Cấu hình Passport để sử dụng GitHub OAuth
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: process.env.CALLBACK_URL,
+    },
+    function (accessToken, refreshToken, profile, done) {
+      return done(null, profile)
+    },
+  ),
+)
+
+passport.serializeUser(function (user, done) {
+  done(null, user)
+})
+
+passport.deserializeUser(function (obj, done) {
+  done(null, obj)
+})
+
+// Middleware để sử dụng session và Passport
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  }),
+)
+app.use(passport.initialize())
+app.use(passport.session())
+
+// Route để redirect người dùng đến GitHub để đăng nhập
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
+
+// Callback sau khi người dùng cấp quyền cho ứng dụng
+app.get(
+  '/auth/github/callback',
+  passport.authenticate('github', { failureRedirect: '/' }),
+  function (req, res) {
+    console.log('User logged in:', req.user) // Thêm dòng này để kiểm tra xem user có được trả về không
+    res.redirect('/')
+  },
+)
+
+// Trang chính
 app.get('/', (req, res) => {
-  res.send('<h1>Welcome to the GitHub OAuth App!</h1>')
-})
-
-// Sử dụng các giá trị từ tệp .env
-const client_id = process.env.CLIENT_ID
-const client_secret = process.env.CLIENT_SECRET
-
-// Kiểm tra môi trường và sử dụng giá trị `redirect_uri` phù hợp
-const redirect_uri =
-  process.env.NODE_ENV === 'production'
-    ? 'https://manhwa-academy.github.io/bluearchive/login/github/callback'
-    : 'http://localhost:3000/login/github/callback'
-
-// Route để bắt đầu quy trình OAuth
-app.get('/login/github', (req, res) => {
-  const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(
-    redirect_uri,
-  )}`
-  res.redirect(authUrl) // Chuyển người dùng đến GitHub để đăng nhập
-})
-
-// Route callback sau khi người dùng cấp quyền
-app.get('/login/github/callback', async (req, res) => {
-  const { code } = req.query // Lấy mã code từ GitHub (sau khi người dùng cấp quyền)
-
-  if (!code) {
-    return res.status(400).send('Code not provided')
-  }
-
-  try {
-    // Gửi mã code đến GitHub để lấy access token
-    const response = await axios.post('https://github.com/login/oauth/access_token', null, {
-      params: {
-        client_id,
-        client_secret,
-        code,
-        redirect_uri,
-      },
-      headers: {
-        Accept: 'application/json', // GitHub yêu cầu trả về kết quả ở định dạng JSON
-      },
-    })
-
-    const { access_token } = response.data // Lấy access_token từ GitHub
-
-    // Bạn có thể sử dụng access token này để gọi API GitHub (ví dụ lấy thông tin người dùng)
-    const userResponse = await axios.get('https://api.github.com/user', {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    })
-
-    // Hiển thị thông tin người dùng hoặc làm việc với thông tin này
-    res.send(`<h1>Welcome, ${userResponse.data.login}!</h1>`) // Ví dụ trả về tên người dùng GitHub
-  } catch (error) {
-    console.error('Error during OAuth process:', error)
-    res.status(500).send('Error during OAuth process')
+  if (req.isAuthenticated()) {
+    const { username, displayName, photos } = req.user
+    res.send(`
+      <h1>Hi ${displayName || username}, you're logged in!</h1>
+      <img src="${photos[0].value}" alt="${username}'s profile picture" />
+      <p><a href="/logout">Logout</a></p>
+    `)
+  } else {
+    res.send('<h1>Welcome! Please <a href="/auth/github">login with GitHub</a>.</h1>')
   }
 })
 
-// Khởi chạy server trên cổng 3000
-const port = 3000
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`))
+// Route để người dùng đăng xuất
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) return res.send('Error while logging out')
+    res.redirect('/')
+  })
+})
+
+// Khởi chạy server
+app.listen(3000, () => {
+  console.log('App is running on http://localhost:3000')
+})
