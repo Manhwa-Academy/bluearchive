@@ -1,9 +1,11 @@
-// Import các thư viện
-const express = require('express')
-const passport = require('passport')
-const session = require('express-session')
-const GitHubStrategy = require('passport-github2').Strategy
-require('dotenv').config() // Tải các biến môi trường từ tệp .env
+// Sử dụng `import` thay vì `require`
+import express from 'express'
+import passport from 'passport'
+import session from 'express-session'
+import GitHubStrategy from 'passport-github2'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
 
@@ -11,29 +13,32 @@ const app = express()
 passport.use(
   new GitHubStrategy(
     {
-      clientID: process.env.CLIENT_ID, // Lấy clientID từ .env
-      clientSecret: process.env.CLIENT_SECRET, // Lấy clientSecret từ .env
-      callbackURL: process.env.CALLBACK_URL, // Lấy callbackURL từ .env
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      // Cập nhật callback URL cho môi trường phát triển và sản xuất
+      callbackURL:
+        process.env.NODE_ENV === 'production'
+          ? 'https://manhwa-academy.vercel.app/auth/github/callback' // URL sản xuất
+          : 'http://localhost:3000/auth/github/callback', // URL localhost khi phát triển
     },
     function (accessToken, refreshToken, profile, done) {
-      // Lưu thông tin người dùng vào session
-      return done(null, profile)
+      return done(null, profile) // Trả về thông tin người dùng
     },
   ),
 )
 
 passport.serializeUser(function (user, done) {
-  done(null, user)
+  done(null, user) // Lưu thông tin người dùng vào session
 })
 
 passport.deserializeUser(function (obj, done) {
-  done(null, obj)
+  done(null, obj) // Phục hồi thông tin người dùng từ session
 })
 
 // Middleware để sử dụng session và Passport
 app.use(
   session({
-    secret: process.env.SESSION_SECRET, // Lấy session secret từ .env
+    secret: process.env.SESSION_SECRET, // Lấy secret từ .env
     resave: false,
     saveUninitialized: true,
   }),
@@ -49,14 +54,14 @@ app.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   function (req, res) {
-    res.redirect('/')
+    console.log('User logged in:', req.user) // Thêm dòng này để kiểm tra xem user có được trả về không
+    res.redirect('/') // Sau khi đăng nhập thành công, chuyển hướng về trang chủ
   },
 )
 
 // Trang chính
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
-    // Nếu người dùng đã đăng nhập, hiển thị thông tin người dùng
     const { username, displayName, photos } = req.user
     res.send(`
       <h1>Hi ${displayName || username}, you're logged in!</h1>
@@ -64,7 +69,6 @@ app.get('/', (req, res) => {
       <p><a href="/logout">Logout</a></p>
     `)
   } else {
-    // Nếu chưa đăng nhập, hiển thị liên kết đăng nhập
     res.send('<h1>Welcome! Please <a href="/auth/github">login with GitHub</a>.</h1>')
   }
 })
@@ -73,7 +77,7 @@ app.get('/', (req, res) => {
 app.get('/logout', (req, res) => {
   req.logout((err) => {
     if (err) return res.send('Error while logging out')
-    res.redirect('/')
+    res.redirect('/') // Sau khi đăng xuất, chuyển về trang chủ
   })
 })
 
