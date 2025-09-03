@@ -47,7 +47,7 @@
           <div class="comment">
             <img :src="c.userAvatar" alt="Avatar" class="comment-avatar" />
             <div class="comment-content">
-              <strong>{{ c.userName }}</strong>
+              <strong>{{ c.userName || 'Người dùng ẩn danh' }}</strong>
               <span class="comment-time"> ({{ formatFullDate(c.createdAt) }}) </span>
               <p>{{ c.text }}</p>
 
@@ -71,9 +71,23 @@
               <div class="comment">
                 <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
                 <div class="comment-content">
-                  <strong>{{ reply.userName }}</strong>
+                  <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
 
+                  <button @click="toggleReplies(c.id)">
+                    Xem {{ c.replies && c.replies.length }} phản hồi
+                  </button>
+                  <ul v-if="c.showReplies">
+                    <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
+                      <div class="comment">
+                        <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
+                        <div class="comment-content">
+                          <strong>{{ reply.userName || 'Anonymous' }}</strong>
+                          <p>{{ reply.text }}</p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
                   <!-- Render Media -->
                   <div v-if="reply.mediaUrl">
                     <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
@@ -152,6 +166,12 @@ const previewText = ref('')
 const isPreviewVisible = ref(false)
 const replyText = ref('')
 const isReplyingToCommentId = ref<string | null>(null)
+const toggleReplies = (commentId) => {
+  const comment = comments.value.find((c) => c.id === commentId)
+  if (comment) {
+    comment.showReplies = !comment.showReplies
+  }
+}
 
 function signInWithGitHub() {
   const provider = new GithubAuthProvider()
@@ -281,10 +301,12 @@ function isGif(url: string) {
 }
 
 onMounted(() => {
-  // Lắng nghe thay đổi trạng thái đăng nhập
   onAuthStateChanged(auth, (currentUser) => {
-    user.value = currentUser
-    console.log(user.value) // Kiểm tra thông tin người dùng khi thay đổi
+    if (currentUser) {
+      // Kiểm tra nếu displayName là null, thay thế bằng tên mặc định
+      user.value = currentUser
+      user.value.displayName = currentUser.displayName || 'Người dùng ẩn danh' // Tên mặc định
+    }
   })
 
   const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'))
@@ -293,7 +315,6 @@ onMounted(() => {
       id: doc.id,
       ...doc.data(),
     }))
-    // Gắn các câu trả lời vào mỗi bình luận
     comments.value.forEach((comment) => {
       comment.replies = comments.value.filter((c) => c.parentId === comment.id)
     })
