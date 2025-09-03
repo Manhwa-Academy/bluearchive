@@ -74,20 +74,6 @@
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
 
-                  <button @click="toggleReplies(c.id)">
-                    Xem {{ c.replies && c.replies.length }} phản hồi
-                  </button>
-                  <ul v-if="c.showReplies">
-                    <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
-                      <div class="comment">
-                        <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
-                        <div class="comment-content">
-                          <strong>{{ reply.userName || 'Anonymous' }}</strong>
-                          <p>{{ reply.text }}</p>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
                   <!-- Render Media -->
                   <div v-if="reply.mediaUrl">
                     <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
@@ -119,6 +105,22 @@
             <button @click="submitReply(c.id)">Gửi trả lời</button>
             <button @click="cancelReply">Hủy</button>
           </div>
+
+          <!-- Hiển thị câu trả lời (click "Xem 1 phản hồi") -->
+          <button v-if="c.replies && c.replies.length > 0" @click="toggleReplies(c.id)">
+            Xem {{ c.replies.length }} phản hồi
+          </button>
+          <ul v-if="isRepliesVisible[c.id]">
+            <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
+              <div class="comment">
+                <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
+                <div class="comment-content">
+                  <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
+                  <p>{{ reply.text }}</p>
+                </div>
+              </div>
+            </li>
+          </ul>
         </li>
       </ul>
 
@@ -153,7 +155,6 @@ import {
   doc,
 } from 'firebase/firestore'
 import { app } from '../../firebase.js'
-import { formatDistanceToNow } from 'date-fns'
 
 const auth = getAuth(app)
 const db = getFirestore(app)
@@ -166,12 +167,7 @@ const previewText = ref('')
 const isPreviewVisible = ref(false)
 const replyText = ref('')
 const isReplyingToCommentId = ref<string | null>(null)
-const toggleReplies = (commentId) => {
-  const comment = comments.value.find((c) => c.id === commentId)
-  if (comment) {
-    comment.showReplies = !comment.showReplies
-  }
-}
+const isRepliesVisible = ref<any>({})  // Để kiểm soát việc xem câu trả lời
 
 function signInWithGitHub() {
   const provider = new GithubAuthProvider()
@@ -187,7 +183,7 @@ async function submitComment() {
   try {
     const docRef = await addDoc(collection(db, 'comments'), {
       userId: user.value.uid,
-      userName: user.value.displayName || 'Người dùng ẩn danh', // Tên mặc định
+      userName: user.value.displayName,
       userAvatar: user.value.photoURL,
       text: comment.value.trim(),
       createdAt: new Date(),
@@ -204,6 +200,34 @@ async function submitComment() {
   }
 }
 
+async function submitReply(parentId: string) {
+  if (!replyText.value.trim()) return
+  try {
+    await addDoc(collection(db, 'comments'), {
+      userId: user.value.uid,
+      userName: user.value.displayName || 'Người dùng ẩn danh',
+      userAvatar: user.value.photoURL,
+      text: replyText.value.trim(),
+      createdAt: new Date(),
+      parentId: parentId,
+      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null,
+    })
+    replyText.value = ''
+    isReplyingToCommentId.value = null
+  } catch (err) {
+    alert('Gửi trả lời lỗi: ' + err.message)
+  }
+}
+
+function toggleReplies(commentId: string) {
+  isRepliesVisible.value[commentId] = !isRepliesVisible.value[commentId]
+}
+
+function cancelReply() {
+  isReplyingToCommentId.value = null
+  replyText.value = ''
+}
+
 function formatFullDate(timestamp: any) {
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
   return date.toLocaleString('vi-VN', {
@@ -217,76 +241,6 @@ function formatFullDate(timestamp: any) {
   })
 }
 
-function formatTime(timestamp: any) {
-  return formatDistanceToNow(new Date(timestamp.seconds * 1000), { addSuffix: true })
-}
-
-function togglePreview() {
-  isPreviewVisible.value = !isPreviewVisible.value
-}
-
-async function deleteComment(commentId: string) {
-  if (!commentId) {
-    alert('Không thể xóa bình luận, không tìm thấy ID bình luận.')
-    return
-  }
-
-  try {
-    const commentRef = doc(db, 'comments', commentId)
-    await deleteDoc(commentRef)
-  } catch (err) {
-    alert('Xóa bình luận thất bại: ' + err.message)
-  }
-}
-
-function replyToComment(commentId: string) {
-  isReplyingToCommentId.value = commentId
-  replyText.value = ''
-}
-
-async function submitReply(parentId: string) {
-  if (!replyText.value.trim()) return
-  try {
-    await addDoc(collection(db, 'comments'), {
-      userId: user.value.uid,
-      userName: user.value.displayName || 'Người dùng ẩn danh', // Tên mặc định
-      userAvatar: user.value.photoURL,
-      text: replyText.value.trim(),
-      createdAt: new Date(),
-      parentId: parentId, // Trả lời comment này
-      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Handle media for replies
-    })
-    replyText.value = ''
-    isReplyingToCommentId.value = null
-  } catch (err) {
-    alert('Gửi trả lời lỗi: ' + err.message)
-  }
-}
-
-function cancelReply() {
-  isReplyingToCommentId.value = null
-  replyText.value = ''
-}
-
-function embedMedia() {
-  if (mediaUrl.value) {
-    const url = mediaUrl.value.trim()
-    if (url) {
-      // Validate URL to ensure it's a valid image, gif, or video URL
-      const validImageUrl = /\.(jpg|jpeg|png|gif)$/i.test(url)
-      const validVideoUrl = /\.(mp4|webm|ogg)$/i.test(url)
-      const validGifUrl = /\.gif$/i.test(url)
-
-      if (validImageUrl || validVideoUrl || validGifUrl) {
-        // Store the media URL in comment
-        mediaUrl.value = url
-      } else {
-        alert('Invalid media URL. Please use a valid image, gif, or video URL.')
-      }
-    }
-  }
-}
-
 function isImage(url: string) {
   return /\.(jpg|jpeg|png)$/i.test(url)
 }
@@ -298,27 +252,6 @@ function isVideo(url: string) {
 function isGif(url: string) {
   return /\.gif$/i.test(url)
 }
-
-onMounted(() => {
-  onAuthStateChanged(auth, (currentUser) => {
-    if (currentUser) {
-      // Kiểm tra nếu displayName là null, thay thế bằng tên mặc định
-      user.value = currentUser
-      user.value.displayName = currentUser.displayName || 'Người dùng ẩn danh' // Tên mặc định
-    }
-  })
-
-  const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'))
-  onSnapshot(q, (snapshot) => {
-    comments.value = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
-    comments.value.forEach((comment) => {
-      comment.replies = comments.value.filter((c) => c.parentId === comment.id)
-    })
-  })
-})
 </script>
 <style scoped>
 .github-login-comment {
