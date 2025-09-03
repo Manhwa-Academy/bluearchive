@@ -92,7 +92,7 @@
                   </div>
 
                   <div class="comment-actions">
-                    <button v-if="user?.uid" @click="deleteComment(reply.id)">Xóa</button>
+                    <button v-if="user?.uid" @click="confirmDelete(reply.id)">Xóa</button>
                     <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
                       Trả lời
                     </button>
