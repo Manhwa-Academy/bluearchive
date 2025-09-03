@@ -41,7 +41,7 @@
       <ul>
         <li
           v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
-          :key="c.id"
+          :key="index"
           class="comment-item"
         >
           <div class="comment">
@@ -74,6 +74,20 @@
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
 
+                  <button @click="toggleReplies(c.id)">
+                    Xem {{ c.replies && c.replies.length }} phản hồi
+                  </button>
+                  <ul v-if="c.showReplies">
+                    <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
+                      <div class="comment">
+                        <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
+                        <div class="comment-content">
+                          <strong>{{ reply.userName || 'Anonymous' }}</strong>
+                          <p>{{ reply.text }}</p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
                   <!-- Render Media -->
                   <div v-if="reply.mediaUrl">
                     <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
@@ -99,23 +113,6 @@
             </li>
           </ul>
 
-          <!-- Hiển thị "Xem 1 phản hồi" ở người bị trả lời -->
-          <button v-if="c.replies && c.replies.length > 0" @click="toggleReplies(c.id)">
-            Xem {{ c.replies.length }} phản hồi
-          </button>
-
-          <ul v-if="isRepliesVisible[c.id]">
-            <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
-              <div class="comment">
-                <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
-                <div class="comment-content">
-                  <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
-                  <p>{{ reply.text }}</p>
-                </div>
-              </div>
-            </li>
-          </ul>
-
           <!-- Trả lời bình luận -->
           <div v-if="isReplyingToCommentId === c.id" class="reply-box">
             <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
@@ -135,7 +132,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
