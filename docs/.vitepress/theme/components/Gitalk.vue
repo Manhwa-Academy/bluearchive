@@ -16,10 +16,10 @@
       <div v-if="user">
         <div class="user-info">
           <img
-            :src="user?.photoURL || 'default-avatar-url'"
-            alt="User Avatar"
-            class="user-avatar"
-            @click="getGitHubInfo"
+            :src="c.userAvatar || 'default-avatar-url'"
+            alt="Avatar"
+            class="comment-avatar"
+            @click="getGitHubInfo(c.userName)"
           />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
           <button class="logout-button" @click="signOut">Đăng xuất</button>
@@ -239,21 +239,20 @@ async function submitComment() {
     alert('Gửi bình luận lỗi: ' + err.message)
   }
 }
-async function getGitHubInfo() {
-  if (user.value) {
-    const githubUsername = user.value.displayName // Giả sử displayName là username GitHub
-    try {
-      const response = await fetch(`https://api.github.com/users/${githubUsername}`)
-      if (response.ok) {
-        githubUserInfo.value = await response.json()
-      } else {
-        alert('Không thể lấy thông tin GitHub.')
-      }
-    } catch (error) {
-      console.error('Error fetching GitHub info:', error)
+async function getGitHubInfo(userName) {
+  console.log('Đang lấy thông tin GitHub cho:', userName) // Log tên người dùng
+  try {
+    const response = await fetch(`https://api.github.com/users/${userName}`)
+    if (response.ok) {
+      githubUserInfo.value = await response.json() // Lưu thông tin GitHub
+    } else {
+      alert('Không thể lấy thông tin GitHub.')
     }
+  } catch (error) {
+    console.error('Lỗi khi lấy thông tin GitHub:', error)
   }
 }
+
 function formatFullDate(timestamp: any) {
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
   return date.toLocaleString('vi-VN', {
@@ -491,6 +490,7 @@ textarea:disabled {
   height: 35px;
   border-radius: 50%;
   margin-right: 15px;
+  cursor: pointer; /* Thêm thuộc tính này để avatar có thể được nhấn */
 }
 .comment-content {
   display: flex;
