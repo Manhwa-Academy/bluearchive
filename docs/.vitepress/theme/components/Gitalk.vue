@@ -10,7 +10,11 @@
     <div class="comment-area">
       <div v-if="user">
         <div class="user-info">
-          <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="user-avatar" />
+          <img
+            :src="user?.photoURL || 'default-avatar-url'"
+            alt="User Avatar"
+            class="user-avatar"
+          />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
           <button class="logout-button" @click="signOut">Đăng xuất</button>
         </div>
@@ -30,8 +34,12 @@
         </div>
         <br />
         <div class="button-group">
-          <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">Gửi bình luận</button>
-          <button class="preview-button" @click="togglePreview" :disabled="!comment.trim()">Preview</button>
+          <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">
+            Gửi bình luận
+          </button>
+          <button class="preview-button" @click="togglePreview" :disabled="!comment.trim()">
+            Preview
+          </button>
         </div>
       </div>
 
@@ -68,7 +76,11 @@
           <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
-                <img :src="reply.userAvatar || 'default-avatar-url'" alt="Avatar" class="comment-avatar" />
+                <img
+                  :src="reply.userAvatar || 'default-avatar-url'"
+                  alt="Avatar"
+                  class="comment-avatar"
+                />
                 <div class="comment-content">
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
@@ -76,13 +88,22 @@
                   <!-- Render Media -->
                   <div v-if="reply.mediaUrl">
                     <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
-                    <video v-if="isVideo(reply.mediaUrl)" :src="reply.mediaUrl" controls class="media"></video>
+                    <video
+                      v-if="isVideo(reply.mediaUrl)"
+                      :src="reply.mediaUrl"
+                      controls
+                      class="media"
+                    ></video>
                     <img v-if="isGif(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
                   </div>
 
                   <div class="comment-actions">
-                    <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">Xóa</button>
-                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">Trả lời</button>
+                    <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">
+                      Xóa
+                    </button>
+                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
+                      Trả lời
+                    </button>
                   </div>
                 </div>
               </div>
@@ -106,7 +127,11 @@
       <div v-if="isPreviewVisible" class="preview-box">
         <h4>Preview:</h4>
         <div class="preview-content">
-          <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="preview-avatar" />
+          <img
+            :src="user?.photoURL || 'default-avatar-url'"
+            alt="User Avatar"
+            class="preview-avatar"
+          />
           <p>{{ previewText }}</p>
         </div>
       </div>
@@ -114,16 +139,15 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue'
 import {
   getAuth,
   GithubAuthProvider,
   signInWithPopup,
   signOut as firebaseSignOut,
   onAuthStateChanged,
-} from 'firebase/auth';
+} from 'firebase/auth'
 import {
   getFirestore,
   collection,
@@ -134,47 +158,47 @@ import {
   deleteDoc,
   doc,
   getDoc,
-} from 'firebase/firestore';
-import { app } from '../../firebase.js';
-import { formatDistanceToNow } from 'date-fns';
+} from 'firebase/firestore'
+import { app } from '../../firebase.js'
+import { formatDistanceToNow } from 'date-fns'
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth = getAuth(app)
+const db = getFirestore(app)
 
-const user = ref<any | null>(null);
-const comment = ref('');
-const comments = ref<any[]>([]);
-const mediaUrl = ref('');
-const previewText = ref('');
-const isPreviewVisible = ref(false);
-const replyText = ref('');
-const isReplyingToCommentId = ref<string | null>(null);
+const user = ref<any | null>(null)
+const comment = ref('')
+const comments = ref<any[]>([])
+const mediaUrl = ref('')
+const previewText = ref('')
+const isPreviewVisible = ref(false)
+const replyText = ref('')
+const isReplyingToCommentId = ref<string | null>(null)
 
 const toggleReplies = (commentId: string) => {
-  const comment = comments.value.find((c) => c.id === commentId);
+  const comment = comments.value.find((c) => c.id === commentId)
   if (comment) {
-    comment.showReplies = !comment.showReplies;
+    comment.showReplies = !comment.showReplies
   }
-};
+}
 
 function signInWithGitHub() {
-  const provider = new GithubAuthProvider();
-  signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message));
+  const provider = new GithubAuthProvider()
+  signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message))
 }
 
 function signOut() {
   firebaseSignOut(auth)
     .then(() => {
-      user.value = null;
-      alert('Đăng xuất thành công!');
+      user.value = null
+      alert('Đăng xuất thành công!')
     })
     .catch((err) => {
-      alert('Lỗi đăng xuất: ' + err.message);
-    });
+      alert('Lỗi đăng xuất: ' + err.message)
+    })
 }
 
 async function submitComment() {
-  if (!comment.value.trim()) return;
+  if (!comment.value.trim()) return
   try {
     const docRef = await addDoc(collection(db, 'comments'), {
       userId: user.value ? user.value.uid : 'anonymous',
@@ -185,18 +209,18 @@ async function submitComment() {
       parentId: null, // Bình luận gốc
       replies: [], // Mảng trả lời
       mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null,
-    });
-    comment.value = '';
-    mediaUrl.value = '';
-    previewText.value = '';
-    isPreviewVisible.value = false;
+    })
+    comment.value = ''
+    mediaUrl.value = ''
+    previewText.value = ''
+    isPreviewVisible.value = false
   } catch (err) {
-    alert('Gửi bình luận lỗi: ' + err.message);
+    alert('Gửi bình luận lỗi: ' + err.message)
   }
 }
 
 function formatFullDate(timestamp: any) {
-  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
   return date.toLocaleString('vi-VN', {
     weekday: 'long',
     year: 'numeric',
@@ -205,57 +229,58 @@ function formatFullDate(timestamp: any) {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
-  });
+  })
 }
 
 function formatTime(timestamp: any) {
-  return formatDistanceToNow(new Date(timestamp.seconds * 1000), { addSuffix: true });
+  return formatDistanceToNow(new Date(timestamp.seconds * 1000), { addSuffix: true })
 }
 
 function togglePreview() {
-  isPreviewVisible.value = !isPreviewVisible.value;
+  isPreviewVisible.value = !isPreviewVisible.value
 }
 
 async function deleteComment(commentId: string) {
   if (!user.value) {
-    alert('Bạn cần đăng nhập để xóa bình luận.');
-    return;
+    alert('Bạn cần đăng nhập để xóa bình luận.')
+    return
   }
 
   if (!commentId) {
-    alert('Không thể xóa bình luận, không tìm thấy ID bình luận.');
-    return;
+    alert('Không thể xóa bình luận, không tìm thấy ID bình luận.')
+    return
   }
 
   try {
-    const commentRef = doc(db, 'comments', commentId);
-    const commentDoc = await getDoc(commentRef);
+    const commentRef = doc(db, 'comments', commentId)
+    const commentDoc = await getDoc(commentRef)
 
     // Kiểm tra xem người dùng có phải là chủ sở hữu của bình luận hay không
     if (commentDoc.exists() && commentDoc.data().userId === user.value.uid) {
-      await deleteDoc(commentRef);
-      alert('Bình luận đã bị xóa thành công.');
+      await deleteDoc(commentRef)
+      alert('Bình luận đã bị xóa thành công.')
     } else {
-      alert('Bạn không có quyền xóa bình luận này.');
+      alert('Bạn không có quyền xóa bình luận này.')
     }
   } catch (err) {
-    alert('Xóa bình luận thất bại: ' + err.message);
+    alert('Xóa bình luận thất bại: ' + err.message)
   }
 }
 
 async function confirmDelete(commentId: string) {
   if (confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
-    await deleteComment(commentId);
+    await deleteComment(commentId)
   }
 }
 
 function replyToComment(commentId: string) {
-  isReplyingToCommentId.value = commentId;
-  replyText.value = ''; // Reset phần trả lời mỗi khi nhấn trả lời
+  isReplyingToCommentId.value = commentId
+  console.log('Replying to comment ID:', isReplyingToCommentId.value)
+  replyText.value = '' // Reset phần trả lời mỗi khi nhấn trả lời
 }
 
 async function submitReply(parentId: string) {
-  if (!replyText.value.trim()) return;
+  if (!replyText.value.trim()) return
 
   try {
     await addDoc(collection(db, 'comments'), {
@@ -266,70 +291,69 @@ async function submitReply(parentId: string) {
       createdAt: new Date(),
       parentId: parentId, // Trả lời bình luận này
       mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null,
-    });
+    })
 
-    replyText.value = '';
-    isReplyingToCommentId.value = null; // Reset khi trả lời xong
+    replyText.value = ''
+    isReplyingToCommentId.value = null // Reset khi trả lời xong
   } catch (err) {
-    alert('Gửi trả lời lỗi: ' + err.message);
+    alert('Gửi trả lời lỗi: ' + err.message)
   }
 }
 
 function cancelReply() {
-  isReplyingToCommentId.value = null;
-  replyText.value = '';
+  isReplyingToCommentId.value = null
+  replyText.value = ''
 }
 
 function embedMedia() {
   if (mediaUrl.value) {
-    const url = mediaUrl.value.trim();
+    const url = mediaUrl.value.trim()
     if (url) {
       // Validate URL to ensure it's a valid image, gif, or video URL
-      const validImageUrl = /\.(jpg|jpeg|png|gif)$/i.test(url);
-      const validVideoUrl = /\.(mp4|webm|ogg)$/i.test(url);
-      const validGifUrl = /\.gif$/i.test(url);
+      const validImageUrl = /\.(jpg|jpeg|png|gif)$/i.test(url)
+      const validVideoUrl = /\.(mp4|webm|ogg)$/i.test(url)
+      const validGifUrl = /\.gif$/i.test(url)
 
       if (validImageUrl || validVideoUrl || validGifUrl) {
-        // Store the media URL in comment
-        mediaUrl.value = url;
+        mediaUrl.value = url
       } else {
-        alert('Invalid media URL. Please use a valid image, gif, or video URL.');
+        alert('Invalid media URL. Please use a valid image, gif, or video URL.')
       }
     }
   }
 }
 
 function isImage(url: string) {
-  return /\.(jpg|jpeg|png)$/i.test(url);
+  return /\.(jpg|jpeg|png)$/i.test(url)
 }
 
 function isVideo(url: string) {
-  return /\.(mp4|webm|ogg)$/i.test(url);
+  return /\.(mp4|webm|ogg)$/i.test(url)
 }
 
 function isGif(url: string) {
-  return /\.gif$/i.test(url);
+  return /\.gif$/i.test(url)
 }
 
 onMounted(() => {
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
-      user.value = currentUser;
-      user.value.displayName = currentUser.displayName || 'Người dùng ẩn danh';
+      user.value = currentUser
+      user.value.displayName = currentUser.displayName || 'Người dùng ẩn danh'
     }
-  });
+  })
 
-  const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'));
+  const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'))
   onSnapshot(q, (snapshot) => {
     comments.value = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    }));
+    }))
     comments.value.forEach((comment) => {
-      comment.replies = comments.value.filter((c) => c.parentId === comment.id);
-    });
-  });
-});
+      comment.replies = comments.value.filter((c) => c.parentId === comment.id)
+    })
+  })
+})
 </script>
 
 <style scoped>
