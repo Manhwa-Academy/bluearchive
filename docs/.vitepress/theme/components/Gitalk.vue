@@ -1,13 +1,13 @@
 <template>
   <div class="github-login-comment">
     <div class="login-area">
-      <textarea v-model="comment" placeholder="Nhập bình luận..."></textarea>
-      <button class="login-button" @click="signInWithGitHub">Login with GitHub</button>
+      <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
+      <button class="login-button" @click="signInWithGitHub" v-if="!user">Login with GitHub</button>
       <br /><br />
-      <button class="preview-button" :disabled="!comment.trim()">Preview</button>
+      <button class="preview-button" :disabled="!comment.trim() || !user">Preview</button>
     </div>
 
-    <div class="comment-area">
+    <div class="comment-area" v-if="user">
       <div class="user-info">
         <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="user-avatar" />
         <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
@@ -23,16 +23,17 @@
           type="text"
           placeholder="Insert image, gif, or video URL"
           @keydown.enter.prevent="embedMedia"
+          :disabled="!user"
         />
         <br /><br />
-        <button @click="embedMedia">Embed Media</button>
+        <button @click="embedMedia" :disabled="!user">Embed Media</button>
       </div>
       <br />
       <div class="button-group">
-        <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">
+        <button class="submit-button" @click="submitComment" :disabled="!comment.trim() || !user">
           Gửi bình luận
         </button>
-        <button class="preview-button" @click="togglePreview" :disabled="!comment.trim()">
+        <button class="preview-button" @click="togglePreview" :disabled="!comment.trim() || !user">
           Preview
         </button>
       </div>
@@ -59,7 +60,7 @@
               </div>
 
               <div class="comment-actions">
-                <!-- Chỉ hiển thị nút Xóa nếu người dùng đã đăng nhập và là chủ sở hữu của bình luận -->
+                <!-- Hiển thị nút Xóa chỉ nếu người dùng đã đăng nhập và là chủ sở hữu của bình luận -->
                 <button v-if="user?.uid === c.userId" @click="confirmDelete(c.id)">Xóa</button>
                 <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">Trả lời</button>
               </div>
@@ -92,10 +93,7 @@
                   </div>
 
                   <div class="comment-actions">
-                    <!-- Chỉ hiển thị nút Xóa nếu người dùng đã đăng nhập và là chủ sở hữu của phản hồi -->
-                    <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">
-                      Xóa
-                    </button>
+                    <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">Xóa</button>
                     <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
                       Trả lời
                     </button>
@@ -133,6 +131,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
