@@ -48,7 +48,7 @@
       <!-- Hiển thị bình luận cho tất cả người dùng, dù họ có đăng nhập hay không -->
       <h3>Bình luận đã gửi ({{ comments.length }}):</h3>
       <ul>
-        <li
+        <div
           v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
           :key="index"
           class="comment-item"
@@ -75,7 +75,7 @@
             </div>
           </div>
 
-          <!-- Hiển thị phản hồi chỉ khi showReplies là true -->
+          <!-- Hiển thị phản hồi khi showReplies là true -->
           <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
@@ -118,7 +118,7 @@
             {{ c.showReplies ? 'Ẩn phản hồi' : 'Xem ' + c.replies.length + ' phản hồi' }}
           </button>
 
-          <!-- Khung trả lời -->
+          <!-- Hiển thị phần trả lời -->
           <div v-if="isReplyingToCommentId === c.id" class="reply-box">
             <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
             <button @click="submitReply(c.id)">Gửi trả lời</button>
@@ -175,12 +175,12 @@ const previewText = ref('')
 const isPreviewVisible = ref(false)
 const replyText = ref('')
 const isReplyingToCommentId = ref<string | null>(null)
-const toggleReplies = (commentId) => {
-  const comment = comments.value.find((c) => c.id === commentId)
+const toggleReplies = (commentId: string) => {
+  const comment = comments.value.find((c) => c.id === commentId);
   if (comment) {
-    comment.showReplies = !comment.showReplies // Chuyển đổi trạng thái hiển thị của các phản hồi cho bình luận này
+    comment.showReplies = !comment.showReplies; // Toggle trạng thái hiển thị phản hồi
   }
-}
+};
 function signInWithGitHub() {
   const provider = new GithubAuthProvider()
   signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message))
@@ -272,9 +272,8 @@ async function confirmDelete(commentId: string) {
 }
 function replyToComment(commentId: string) {
   isReplyingToCommentId.value = commentId
-  replyText.value = '' // Đặt lại phần trả lời mỗi khi nhấn trả lời
+  replyText.value = '' // Reset phần trả lời mỗi khi nhấn trả lời
 }
-
 async function submitReply(parentId: string) {
   if (!replyText.value.trim()) return
 
