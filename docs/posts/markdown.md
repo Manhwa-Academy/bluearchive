@@ -170,7 +170,7 @@ Và thêm một vài dòng nữa.
 
 [Tôi là một liên kết kiểu tham chiếu][Văn bản tham chiếu không phân biệt chữ hoa chữ thường tùy ý]
 
-[Tôi là một tham chiếu tương đối đến một tệp kho lưu trữ](../blob/master/LICENSE)
+[Tôi là một tham chiếu tương đối đến một tệp kho lưu trữ](https://zalo.me/0332138297)
 
 [Bạn có thể sử dụng số cho các định nghĩa liên kết kiểu tham chiếu][1]
 
@@ -189,7 +189,7 @@ Một số văn bản để cho thấy các liên kết tham chiếu có thể t
 
 [Tôi là một liên kết kiểu tham chiếu][Văn bản tham chiếu không phân biệt chữ hoa chữ thường tùy ý]
 
-[Tôi là một tham chiếu tương đối đến một tệp kho lưu trữ](../blob/master/LICENSE)
+[Tôi là một tham chiếu tương đối đến một tệp kho lưu trữ](https://zalo.me/0332138297)
 
 [Bạn có thể sử dụng số cho các định nghĩa liên kết kiểu tham chiếu][1]
 

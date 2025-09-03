@@ -29,9 +29,11 @@
     "animejs": "^3.2.2",
     "axios": "^1.11.0",
     "crypto-browserify": "^3.12.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "firebase": "^12.2.1",
     "gitalk": "^1.8.0",
     "gray-matter": "^4.0.3",
     "markdown-it-custom-attrs": "^1.0.2",
@@ -40,6 +42,7 @@
     "normalize.css": "^8.0.1",
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
+    "react-firebase-hooks": "^5.1.1",
     "vite": "^7.1.3"
   }
 }

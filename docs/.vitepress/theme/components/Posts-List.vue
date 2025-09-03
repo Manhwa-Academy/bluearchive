@@ -106,6 +106,21 @@ const base = site.value.base
 // Tạo biến ref để lưu trữ ngày hiện tại
 const currentDate = ref<string>('')
 
+function updateTime() {
+  const now = new Date()
+  // Chuyển sang UTC+7 bằng cách cộng thêm 7 giờ vào UTC
+  now.setUTCHours(now.getUTCHours() + 7)
+
+  const yyyy = now.getUTCFullYear()
+  const mm = String(now.getUTCMonth() + 1).padStart(2, '0')
+  const dd = String(now.getUTCDate()).padStart(2, '0')
+  const hh = String(now.getUTCHours()).padStart(2, '0')
+  const mi = String(now.getUTCMinutes()).padStart(2, '0')
+  const ss = String(now.getUTCSeconds()).padStart(2, '0')
+
+  currentDate.value = `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`
+}
+
 // Hàm để cập nhật ngày hiện tại
 function updateDate() {
   const today = new Date().toISOString().split('T')[0] // Lấy ngày dưới định dạng YYYY-MM-DD
@@ -114,14 +129,15 @@ function updateDate() {
 
 // Sử dụng onMounted để thực thi khi component được tải lên
 onMounted(() => {
-  updateDate() // Cập nhật ngày ngay khi trang được tải
+  updateTime() // Hiển thị lần đầu khi trang tải
+  updateDate() // Cập nhật ngày hiện tại
 
-  // Cập nhật mỗi 24 giờ
-  const interval = setInterval(updateDate, 1000 * 60 * 60 * 24)
+  const interval = setInterval(updateTime, 1000) // Cập nhật thời gian mỗi giây
+  const intervalDate = setInterval(updateDate, 60000) // Cập nhật ngày mỗi phút
 
-  // Dọn dẹp interval khi component bị huỷ
   onUnmounted(() => {
     clearInterval(interval)
+    clearInterval(intervalDate) // Bổ sung dòng này
   })
 })
 
