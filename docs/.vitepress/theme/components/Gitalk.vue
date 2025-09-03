@@ -169,9 +169,13 @@ function signInWithGitHub() {
 }
 
 function signOut() {
-  firebaseSignOut(auth)
+  firebaseSignOut(auth).then(() => {
+    user.value = null; // Đặt lại user sau khi đăng xuất
+    alert('Đăng xuất thành công!');
+  }).catch((err) => {
+    alert('Lỗi đăng xuất: ' + err.message);
+  });
 }
-
 async function submitComment() {
   if (!comment.value.trim()) return
   try {
