@@ -187,7 +187,7 @@ async function submitComment() {
   try {
     const docRef = await addDoc(collection(db, 'comments'), {
       userId: user.value.uid,
-      userName: user.value.displayName,
+      userName: user.value.displayName || 'Người dùng ẩn danh', // Tên mặc định
       userAvatar: user.value.photoURL,
       text: comment.value.trim(),
       createdAt: new Date(),
@@ -249,14 +249,13 @@ async function submitReply(parentId: string) {
   try {
     await addDoc(collection(db, 'comments'), {
       userId: user.value.uid,
-      userName: user.value.displayName,
+      userName: user.value.displayName || 'Người dùng ẩn danh', // Tên mặc định
       userAvatar: user.value.photoURL,
-      text: `@${user.value.displayName} ${replyText.value.trim()}`, // Thêm tên người trả lời vào câu trả lời
+      text: replyText.value.trim(),
       createdAt: new Date(),
-      parentId: parentId, // Trả lời bình luận nào
-      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Xử lý media nếu có
+      parentId: parentId, // Trả lời comment này
+      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Handle media for replies
     })
-
     replyText.value = ''
     isReplyingToCommentId.value = null
   } catch (err) {
