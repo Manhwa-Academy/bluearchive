@@ -1,14 +1,13 @@
-const axios = require('axios') // Hoặc bạn có thể dùng node-fetch
+const axios = require('axios')
 
 module.exports = async (req, res) => {
-  const { code } = req.query // GitHub sẽ trả về `code` trong query string
+  const { code } = req.query
 
   if (!code) {
     return res.status(400).send('Code not provided')
   }
 
   try {
-    // Gửi yêu cầu tới GitHub để lấy access token
     const response = await axios.post('https://github.com/login/oauth/access_token', null, {
       params: {
         client_id: process.env.CLIENT_ID,
@@ -17,20 +16,18 @@ module.exports = async (req, res) => {
         redirect_uri: process.env.REDIRECT_URI,
       },
       headers: {
-        Accept: 'application/json', // Đảm bảo GitHub trả kết quả dưới dạng JSON
+        Accept: 'application/json',
       },
     })
 
     const { access_token } = response.data
 
-    // Dùng access_token để gọi GitHub API và lấy thông tin người dùng
     const userResponse = await axios.get('https://api.github.com/user', {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
     })
 
-    // Trả về thông tin người dùng hoặc chuyển hướng về một trang khác
     res.send(`Hello, ${userResponse.data.login}! You're logged in.`)
   } catch (error) {
     console.error('Error during OAuth callback:', error)
