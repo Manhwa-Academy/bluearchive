@@ -101,7 +101,7 @@
 
           <!-- Nút để chuyển đổi trạng thái hiển thị phản hồi -->
           <button v-if="c.replies.length > 0" @click="toggleReplies(c.id)">
-            Xem {{ c.replies.length }} phản hồi
+            {{ c.showReplies ? 'Ẩn phản hồi' : 'Xem ' + c.replies.length + ' phản hồi' }}
           </button>
 
           <!-- Khung trả lời -->
