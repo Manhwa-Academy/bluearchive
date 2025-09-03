@@ -229,18 +229,25 @@ function togglePreview() {
 }
 
 async function deleteComment(commentId: string) {
+  if (!user.value) {
+    alert('Bạn cần đăng nhập để xóa bình luận.');
+    return;
+  }
+
   if (!commentId) {
-    alert('Không thể xóa bình luận, không tìm thấy ID bình luận.')
-    return
+    alert('Không thể xóa bình luận, không tìm thấy ID bình luận.');
+    return;
   }
 
   try {
-    const commentRef = doc(db, 'comments', commentId)
-    await deleteDoc(commentRef)
+    const commentRef = doc(db, 'comments', commentId);
+    await deleteDoc(commentRef);
+    alert('Bình luận đã bị xóa thành công.');
   } catch (err) {
-    alert('Xóa bình luận thất bại: ' + err.message)
+    alert('Xóa bình luận thất bại: ' + err.message);
   }
 }
+
 
 function replyToComment(commentId: string) {
   isReplyingToCommentId.value = commentId
