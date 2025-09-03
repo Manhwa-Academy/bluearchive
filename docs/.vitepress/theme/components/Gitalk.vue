@@ -74,36 +74,23 @@
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
 
-                  <button @click="toggleReplies(c.id)">
-                    Xem {{ c.replies && c.replies.length }} phản hồi
-                  </button>
-                  
-                  <ul v-if="c.showReplies">
-                    <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
-                      <div class="comment">
-                        <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
-                        <div class="comment-content">
-                          <strong>{{ reply.userName || 'Anonymous' }}</strong>
-                          <p>{{ reply.text }}</p>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
                   <!-- Render Media -->
-                  <div v-if="c.mediaUrl">
-                    <img v-if="isImage(c.mediaUrl)" :src="c.mediaUrl" class="media" />
+                  <div v-if="reply.mediaUrl">
+                    <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
                     <video
-                      v-if="isVideo(c.mediaUrl)"
-                      :src="c.mediaUrl"
+                      v-if="isVideo(reply.mediaUrl)"
+                      :src="reply.mediaUrl"
                       controls
                       class="media"
                     ></video>
-                    <img v-if="isGif(c.mediaUrl)" :src="c.mediaUrl" class="media" />
+                    <img v-if="isGif(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
                   </div>
 
                   <div class="comment-actions">
-                    <button v-if="user?.uid === c.userId" @click="deleteComment(c.id)">Xóa</button>
-                    <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">
+                    <button v-if="user?.uid === reply.userId" @click="deleteComment(reply.id)">
+                      Xóa
+                    </button>
+                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
                       Trả lời
                     </button>
                   </div>
