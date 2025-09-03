@@ -19,9 +19,20 @@
             :src="user?.photoURL || 'default-avatar-url'"
             alt="User Avatar"
             class="user-avatar"
+            @click="getGitHubInfo"
           />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
           <button class="logout-button" @click="signOut">Đăng xuất</button>
+        </div>
+
+        <!-- Hiển thị thông tin GitHub khi nhấn vào avatar -->
+        <div v-if="githubUserInfo" class="github-info">
+          <p>Tên GitHub: {{ githubUserInfo.login }}</p>
+          <p>Số lượng Repository: {{ githubUserInfo.public_repos }}</p>
+          <p>
+            URL GitHub:
+            <a :href="githubUserInfo.html_url" target="_blank">{{ githubUserInfo.html_url }}</a>
+          </p>
         </div>
 
         <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
@@ -178,7 +189,7 @@ const previewText = ref('')
 const isPreviewVisible = ref(false)
 const replyText = ref('')
 const isReplyingToCommentId = ref<string | null>(null)
-
+const isLoggedIn = ref(false) // Trạng thái đăng nhập
 const toggleReplies = (commentId: string) => {
   const comment = comments.value.find((c) => c.id === commentId)
   if (comment) {
@@ -186,9 +197,14 @@ const toggleReplies = (commentId: string) => {
   }
 }
 
-function signInWithGitHub() {
+async function signInWithGitHub() {
   const provider = new GithubAuthProvider()
-  signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message))
+  try {
+    await signInWithPopup(auth, provider)
+    isLoggedIn.value = true // Đánh dấu là đã đăng nhập
+  } catch (err) {
+    alert('Đăng nhập lỗi: ' + err.message)
+  }
 }
 
 function signOut() {
@@ -223,7 +239,21 @@ async function submitComment() {
     alert('Gửi bình luận lỗi: ' + err.message)
   }
 }
-
+async function getGitHubInfo() {
+  if (user.value) {
+    const githubUsername = user.value.displayName // Giả sử displayName là username GitHub
+    try {
+      const response = await fetch(`https://api.github.com/users/${githubUsername}`)
+      if (response.ok) {
+        githubUserInfo.value = await response.json()
+      } else {
+        alert('Không thể lấy thông tin GitHub.')
+      }
+    } catch (error) {
+      console.error('Error fetching GitHub info:', error)
+    }
+  }
+}
 function formatFullDate(timestamp: any) {
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
   return date.toLocaleString('vi-VN', {
@@ -426,14 +456,16 @@ textarea:disabled {
 .user-info {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .user-avatar {
   width: 45px;
   height: 45px;
   border-radius: 50%;
   margin-right: 15px;
+  cursor: pointer; /* Thêm cursor pointer khi hover lên avatar */
 }
+
 .logout-button {
   background-color: #f44336;
   color: white;
@@ -547,5 +579,35 @@ li {
   max-width: 100%;
   max-height: 400px; /* or any size that fits your layout */
   object-fit: contain; /* ensures the image fits within the container without distortion */
+}
+.github-login-comment {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.github-info {
+  background-color: #333;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 5px;
+}
+
+.github-info a {
+  color: #00bfff;
+  text-decoration: none;
+}
+
+.github-info a:hover {
+  text-decoration: underline;
+}
+
+.login-success-message {
+  color: green;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 </style>
