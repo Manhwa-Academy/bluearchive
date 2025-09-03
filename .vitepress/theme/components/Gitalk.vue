@@ -290,7 +290,7 @@ async function submitReply(parentId: string) {
     })
 
     replyText.value = ''
-    isReplyingToCommentId.value = null
+    isReplyingToCommentId.value = null // Reset khi trả lời xong
   } catch (err) {
     alert('Gửi trả lời lỗi: ' + err.message)
   }
