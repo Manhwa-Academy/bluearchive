@@ -41,7 +41,7 @@
       <ul>
         <li
           v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
-          :key="c.id"
+          :key="index"
           class="comment-item"
         >
           <div class="comment">
@@ -65,8 +65,8 @@
             </div>
           </div>
 
-          <!-- Hiển thị các câu trả lời lồng vào nhau -->
-          <ul v-if="c.replies && c.replies.length > 0" class="replies-list">
+          <!-- Hiển thị phản hồi chỉ khi showReplies là true -->
+          <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
                 <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
@@ -74,23 +74,36 @@
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
 
+                  <button @click="toggleReplies(c.id)">
+                    Xem {{ c.replies && c.replies.length }} phản hồi
+                  </button>
+                  
+                  <ul v-if="c.showReplies">
+                    <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
+                      <div class="comment">
+                        <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
+                        <div class="comment-content">
+                          <strong>{{ reply.userName || 'Anonymous' }}</strong>
+                          <p>{{ reply.text }}</p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
                   <!-- Render Media -->
-                  <div v-if="reply.mediaUrl">
-                    <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
+                  <div v-if="c.mediaUrl">
+                    <img v-if="isImage(c.mediaUrl)" :src="c.mediaUrl" class="media" />
                     <video
-                      v-if="isVideo(reply.mediaUrl)"
-                      :src="reply.mediaUrl"
+                      v-if="isVideo(c.mediaUrl)"
+                      :src="c.mediaUrl"
                       controls
                       class="media"
                     ></video>
-                    <img v-if="isGif(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
+                    <img v-if="isGif(c.mediaUrl)" :src="c.mediaUrl" class="media" />
                   </div>
 
                   <div class="comment-actions">
-                    <button v-if="user?.uid === reply.userId" @click="deleteComment(reply.id)">
-                      Xóa
-                    </button>
-                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
+                    <button v-if="user?.uid === c.userId" @click="deleteComment(c.id)">Xóa</button>
+                    <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">
                       Trả lời
                     </button>
                   </div>
@@ -99,24 +112,12 @@
             </li>
           </ul>
 
-          <!-- Hiển thị "Xem 1 phản hồi" ở người bị trả lời -->
-          <button v-if="c.replies && c.replies.length > 0" @click="toggleReplies(c.id)">
+          <!-- Nút để chuyển đổi trạng thái hiển thị phản hồi -->
+          <button v-if="c.replies.length > 0" @click="toggleReplies(c.id)">
             Xem {{ c.replies.length }} phản hồi
           </button>
 
-          <ul v-if="isRepliesVisible[c.id]">
-            <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
-              <div class="comment">
-                <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
-                <div class="comment-content">
-                  <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
-                  <p>{{ reply.text }}</p>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-          <!-- Trả lời bình luận -->
+          <!-- Khung trả lời -->
           <div v-if="isReplyingToCommentId === c.id" class="reply-box">
             <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
             <button @click="submitReply(c.id)">Gửi trả lời</button>
@@ -135,7 +136,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'

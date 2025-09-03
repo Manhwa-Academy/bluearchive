@@ -65,8 +65,8 @@
             </div>
           </div>
 
-          <!-- Hiển thị các câu trả lời lồng vào nhau -->
-          <ul v-if="c.replies && c.replies.length > 0" class="replies-list">
+          <!-- Hiển thị phản hồi chỉ khi showReplies là true -->
+          <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
                 <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
@@ -77,6 +77,7 @@
                   <button @click="toggleReplies(c.id)">
                     Xem {{ c.replies && c.replies.length }} phản hồi
                   </button>
+                  
                   <ul v-if="c.showReplies">
                     <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
                       <div class="comment">
@@ -89,22 +90,20 @@
                     </li>
                   </ul>
                   <!-- Render Media -->
-                  <div v-if="reply.mediaUrl">
-                    <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
+                  <div v-if="c.mediaUrl">
+                    <img v-if="isImage(c.mediaUrl)" :src="c.mediaUrl" class="media" />
                     <video
-                      v-if="isVideo(reply.mediaUrl)"
-                      :src="reply.mediaUrl"
+                      v-if="isVideo(c.mediaUrl)"
+                      :src="c.mediaUrl"
                       controls
                       class="media"
                     ></video>
-                    <img v-if="isGif(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
+                    <img v-if="isGif(c.mediaUrl)" :src="c.mediaUrl" class="media" />
                   </div>
 
                   <div class="comment-actions">
-                    <button v-if="user?.uid === reply.userId" @click="deleteComment(reply.id)">
-                      Xóa
-                    </button>
-                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
+                    <button v-if="user?.uid === c.userId" @click="deleteComment(c.id)">Xóa</button>
+                    <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">
                       Trả lời
                     </button>
                   </div>
@@ -113,7 +112,12 @@
             </li>
           </ul>
 
-          <!-- Trả lời bình luận -->
+          <!-- Nút để chuyển đổi trạng thái hiển thị phản hồi -->
+          <button v-if="c.replies.length > 0" @click="toggleReplies(c.id)">
+            Xem {{ c.replies.length }} phản hồi
+          </button>
+
+          <!-- Khung trả lời -->
           <div v-if="isReplyingToCommentId === c.id" class="reply-box">
             <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
             <button @click="submitReply(c.id)">Gửi trả lời</button>
@@ -169,10 +173,9 @@ const isReplyingToCommentId = ref<string | null>(null)
 const toggleReplies = (commentId) => {
   const comment = comments.value.find((c) => c.id === commentId)
   if (comment) {
-    comment.showReplies = !comment.showReplies
+    comment.showReplies = !comment.showReplies // Chuyển đổi trạng thái hiển thị của các phản hồi cho bình luận này
   }
 }
-
 function signInWithGitHub() {
   const provider = new GithubAuthProvider()
   signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message))
