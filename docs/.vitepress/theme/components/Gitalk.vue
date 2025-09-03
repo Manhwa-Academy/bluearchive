@@ -1,16 +1,16 @@
 <template>
   <div class="github-login-comment">
-    <div v-if="!user" class="login-area">
-      <textarea v-model="comment" placeholder="Nhập bình luận..." disabled></textarea>
+    <div class="login-area">
+      <textarea v-model="comment" placeholder="Nhập bình luận..."></textarea>
       <button class="login-button" @click="signInWithGitHub">Login with GitHub</button>
       <br /><br />
-      <button class="preview-button" disabled>Preview</button>
+      <button class="preview-button" :disabled="!comment.trim()">Preview</button>
     </div>
 
-    <div v-else class="comment-area">
+    <div class="comment-area">
       <div class="user-info">
-        <img :src="user?.photoURL" alt="User Avatar" class="user-avatar" />
-        <p>Xin chào, {{ user?.displayName }}</p>
+        <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="user-avatar" />
+        <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
         <button class="logout-button" @click="signOut">Đăng xuất</button>
       </div>
 
@@ -45,7 +45,7 @@
           class="comment-item"
         >
           <div class="comment">
-            <img :src="c.userAvatar" alt="Avatar" class="comment-avatar" />
+            <img :src="c.userAvatar || 'default-avatar-url'" alt="Avatar" class="comment-avatar" />
             <div class="comment-content">
               <strong>{{ c.userName || 'Người dùng ẩn danh' }}</strong>
               <span class="comment-time"> ({{ formatFullDate(c.createdAt) }}) </span>
@@ -69,7 +69,11 @@
           <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
-                <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
+                <img
+                  :src="reply.userAvatar || 'default-avatar-url'"
+                  alt="Avatar"
+                  class="comment-avatar"
+                />
                 <div class="comment-content">
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
@@ -116,7 +120,11 @@
       <div v-if="isPreviewVisible" class="preview-box">
         <h4>Preview:</h4>
         <div class="preview-content">
-          <img :src="user?.photoURL" alt="User Avatar" class="preview-avatar" />
+          <img
+            :src="user?.photoURL || 'default-avatar-url'"
+            alt="User Avatar"
+            class="preview-avatar"
+          />
           <p>{{ previewText }}</p>
         </div>
       </div>
@@ -169,20 +177,22 @@ function signInWithGitHub() {
 }
 
 function signOut() {
-  firebaseSignOut(auth).then(() => {
-    user.value = null; // Đặt lại user sau khi đăng xuất
-    alert('Đăng xuất thành công!');
-  }).catch((err) => {
-    alert('Lỗi đăng xuất: ' + err.message);
-  });
+  firebaseSignOut(auth)
+    .then(() => {
+      user.value = null // Đặt lại user sau khi đăng xuất
+      alert('Đăng xuất thành công!')
+    })
+    .catch((err) => {
+      alert('Lỗi đăng xuất: ' + err.message)
+    })
 }
 async function submitComment() {
   if (!comment.value.trim()) return
   try {
     const docRef = await addDoc(collection(db, 'comments'), {
-      userId: user.value.uid,
-      userName: user.value.displayName || 'Người dùng ẩn danh', // Tên mặc định
-      userAvatar: user.value.photoURL,
+      userId: user.value ? user.value.uid : 'anonymous', // Dùng ID ẩn danh khi chưa đăng nhập
+      userName: user.value ? user.value.displayName : 'Người dùng ẩn danh', // Tên ẩn danh nếu chưa đăng nhập
+      userAvatar: user.value ? user.value.photoURL : 'default-avatar-url', // Avatar ẩn danh nếu chưa đăng nhập
       text: comment.value.trim(),
       createdAt: new Date(),
       parentId: null, // Bình luận gốc
@@ -197,7 +207,6 @@ async function submitComment() {
     alert('Gửi bình luận lỗi: ' + err.message)
   }
 }
-
 function formatFullDate(timestamp: any) {
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
   return date.toLocaleString('vi-VN', {
