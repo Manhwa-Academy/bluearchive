@@ -2,30 +2,28 @@ import { defineConfigWithTheme } from 'vitepress'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
 
 export interface ThemeConfig {
-  menuList: { name: string; url: string }[]; // Danh sách menu
-  videoBanner: boolean;
-  name: string;
-  welcomeText: string;
-  motto: string[];
-  social: { icon: string; url: string }[]; // Các mạng xã hội
-  spineVoiceLang: 'zh' | 'jp';
-  footerName: string;
-  poweredList: { name: string; url: string }[]; // Powered by danh sách
-  clientID: string;
-  clientSecret: string;
-  repo: string;
-  owner: string;
-  admin: string[]; // Danh sách admin
+  menuList: { name: string; url: string }[]
+  videoBanner: boolean
+  name: string
+  welcomeText: string
+  motto: string[]
+  social: { icon: string; url: string }[]
+  spineVoiceLang: 'zh' | 'jp'
+  footerName: string
+  poweredList: { name: string; url: string }[]
+  clientID: string
+  clientSecret: string
+  repo: string
+  owner: string
+  admin: string[]
 }
 
 export default defineConfigWithTheme<ThemeConfig>({
-  lang: 'zh-CN', // Ngôn ngữ mặc định
+  lang: 'zh-CN',
   ignoreDeadLinks: true,
-  base: '/bluearchive/',
-  cleanUrls: false, // ✅ THÊM để tránh lỗi 404 khi vào các path như /tags/
 
   head: [
-    ['link', { rel: 'shortcut icon', href: '/bluearchive/favicon.ico' }],
+    ['link', { rel: 'shortcut icon', href: '/favicon.ico' }],
     ['link', { rel: 'stylesheet', href: 'https://unpkg.com/gitalk/dist/gitalk.css' }],
     ['script', { src: 'https://unpkg.com/gitalk/dist/gitalk.min.js' }],
     ['link', { rel: 'stylesheet', href: '/bluearchive/font/Blueaka/Blueaka.css' }],
@@ -61,10 +59,9 @@ export default defineConfigWithTheme<ThemeConfig>({
     spineVoiceLang: 'jp',
     footerName: 'Sensei',
     poweredList: [
-      { name: 'Manhwa-Academy', url: 'https://github.com/Manhwa-Academy' },
+      { name: 'Manhwa-Acedemy', url: 'https://github.com/Manhwa-Academy' },
       { name: 'GitHub ', url: 'https://github.com/Manhwa-Academy/bluearchive' },
     ],
-    // OAuth GitHub thông số
     clientID: 'Ov23li32jDZXTfUVDXQM',
     clientSecret: 'e30ce588bb78d96fc8bf9dc861618d11168b3e01',
     repo: 'bluearchive',
@@ -76,7 +73,7 @@ export default defineConfigWithTheme<ThemeConfig>({
     lineNumbers: true,
     math: true,
     config: (md) => {
-      // Sử dụng markdown-it plugins
+      // use more markdown-it plugins!
       md.use(mdItCustomAttrs, 'image', {
         'data-fancybox': 'gallery',
       })
