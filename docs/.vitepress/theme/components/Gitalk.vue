@@ -41,7 +41,7 @@
       <ul>
         <li
           v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
-          :key="index"
+          :key="c.id"
           class="comment-item"
         >
           <div class="comment">
@@ -99,17 +99,11 @@
             </li>
           </ul>
 
-          <!-- Trả lời bình luận -->
-          <div v-if="isReplyingToCommentId === c.id" class="reply-box">
-            <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
-            <button @click="submitReply(c.id)">Gửi trả lời</button>
-            <button @click="cancelReply">Hủy</button>
-          </div>
-
-          <!-- Hiển thị câu trả lời (click "Xem 1 phản hồi") -->
+          <!-- Hiển thị "Xem 1 phản hồi" ở người bị trả lời -->
           <button v-if="c.replies && c.replies.length > 0" @click="toggleReplies(c.id)">
             Xem {{ c.replies.length }} phản hồi
           </button>
+
           <ul v-if="isRepliesVisible[c.id]">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
@@ -121,6 +115,13 @@
               </div>
             </li>
           </ul>
+
+          <!-- Trả lời bình luận -->
+          <div v-if="isReplyingToCommentId === c.id" class="reply-box">
+            <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
+            <button @click="submitReply(c.id)">Gửi trả lời</button>
+            <button @click="cancelReply">Hủy</button>
+          </div>
         </li>
       </ul>
 
@@ -167,7 +168,7 @@ const previewText = ref('')
 const isPreviewVisible = ref(false)
 const replyText = ref('')
 const isReplyingToCommentId = ref<string | null>(null)
-const isRepliesVisible = ref<any>({})  // Để kiểm soát việc xem câu trả lời
+const isRepliesVisible = ref<any>({}) // Để kiểm soát việc xem câu trả lời
 
 function signInWithGitHub() {
   const provider = new GithubAuthProvider()
@@ -253,6 +254,7 @@ function isGif(url: string) {
   return /\.gif$/i.test(url)
 }
 </script>
+
 <style scoped>
 .github-login-comment {
   max-width: 900px;
