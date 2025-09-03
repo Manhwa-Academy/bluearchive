@@ -11,7 +11,17 @@
     <div v-if="isLoggedIn" class="login-success-message">
       <p>Đăng nhập thành công!</p>
     </div>
-
+    <div v-if="githubUserInfo" class="github-info">
+      <img :src="githubUserInfo.avatar_url" alt="User Avatar" class="github-avatar" />
+      <p>Tên GitHub: {{ githubUserInfo.login }}</p>
+      <p>Tên: {{ githubUserInfo.name || 'Chưa cập nhật' }}</p>
+      <p>Tiểu sử: {{ githubUserInfo.bio || 'Chưa có tiểu sử' }}</p>
+      <p>Số lượng Repository: {{ githubUserInfo.public_repos }}</p>
+      <p>
+        URL GitHub:
+        <a :href="githubUserInfo.html_url" target="_blank">{{ githubUserInfo.html_url }}</a>
+      </p>
+    </div>
     <div class="comment-area">
       <div v-if="user">
         <div class="user-info">
@@ -22,7 +32,7 @@
             @click="
               () => {
                 console.log('Avatar clicked')
-                getGitHubInfo()
+                getGitHubInfo() // Gọi đúng hàm mà không cần truyền thêm tham số
               }
             "
           />
@@ -162,6 +172,7 @@
 </template>
 
 <script setup lang="ts">
+const githubUserInfo = ref<any | null>(null) // Khai báo biến githubUserInfo
 import { ref, onMounted } from 'vue'
 import {
   getAuth,
@@ -246,19 +257,59 @@ async function submitComment() {
   }
 }
 async function getGitHubInfo() {
-  console.log('Avatar đã được nhấn') // Kiểm tra xem hàm có được gọi không
-  const githubUsername = user.value ? user.value.displayName : 'defaultUsername' // Lấy tên người dùng GitHub từ user hoặc mặc định
+  const userName = user.value?.displayName // Lấy tên người dùng từ `user`
+  if (!userName) {
+    alert('Không tìm thấy tên người dùng!')
+    return
+  }
   try {
-    const response = await fetch(`https://api.github.com/users/${githubUsername}`)
+    const response = await fetch(`https://api.github.com/users/${userName}`)
     if (response.ok) {
       const data = await response.json()
-      console.log(data) // Kiểm tra dữ liệu trả về từ API
-      githubUserInfo.value = data // Lưu thông tin GitHub vào biến
+      githubUserInfo.value = data
+      console.log(data)
     } else {
       alert('Không thể lấy thông tin GitHub.')
     }
   } catch (error) {
     console.error('Lỗi khi lấy thông tin GitHub:', error)
+  }
+}
+
+function displayGitHubInfo(data) {
+  const githubLoginElement = document.querySelector('#github-login') as HTMLElement
+  if (githubLoginElement) {
+    githubLoginElement.innerText = `Tên GitHub: ${data.login}`
+  } else {
+    console.error('#github-login không tìm thấy!')
+  }
+
+  const githubNameElement = document.querySelector('#github-name') as HTMLElement
+  if (githubNameElement) {
+    githubNameElement.innerText = `Tên: ${data.name || 'Chưa cập nhật'}`
+  } else {
+    console.error('#github-name không tìm thấy!')
+  }
+
+  const githubBioElement = document.querySelector('#github-bio') as HTMLElement
+  if (githubBioElement) {
+    githubBioElement.innerText = `Tiểu sử: ${data.bio || 'Chưa có tiểu sử'}`
+  } else {
+    console.error('#github-bio không tìm thấy!')
+  }
+
+  const githubReposElement = document.querySelector('#github-repos') as HTMLElement
+  if (githubReposElement) {
+    githubReposElement.innerText = `Số lượng Repo: ${data.public_repos}`
+  } else {
+    console.error('#github-repos không tìm thấy!')
+  }
+
+  const githubAvatarElement = document.querySelector('#github-avatar') as HTMLImageElement
+  if (githubAvatarElement) {
+    githubAvatarElement.src = data.avatar_url
+  } else {
+    console.error('#github-avatar không tìm thấy!')
   }
 }
 

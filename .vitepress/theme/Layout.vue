@@ -1,4 +1,8 @@
 <template>
+  <div id="app">
+    <UserProfile />
+  </div>
+
   <Splash></Splash>
   <template v-if="!page.isNotFound">
     <main style="min-height: 100vh">
@@ -44,6 +48,9 @@ import NotFound from './components/NotFound.vue'
 import ToTop from './components/ToTop.vue'
 import Fireworks from './components/Fireworks.vue'
 import Footer from './components/Footer.vue'
+import UserProfile from './components/UserProfile.vue'
+
+
 // @ts-ignore
 import SpinePlayer from './components/Spine-Player/index.vue'
 // 路径切换

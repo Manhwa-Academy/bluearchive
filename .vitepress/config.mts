@@ -3,6 +3,7 @@ import mdItCustomAttrs from 'markdown-it-custom-attrs'
 import Gitalk from 'gitalk'
 import { defineConfig } from 'vite'
 
+
 export interface ThemeConfig {
   menuList: { name: string; url: string }[]
   videoBanner: boolean
