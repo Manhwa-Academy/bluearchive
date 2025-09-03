@@ -24,10 +24,10 @@
           placeholder="Insert image, gif, or video URL"
           @keydown.enter.prevent="embedMedia"
         />
-        <br><br>
+        <br /><br />
         <button @click="embedMedia">Embed Media</button>
       </div>
-<br>
+      <br />
       <div class="button-group">
         <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">
           Gửi bình luận
@@ -73,7 +73,13 @@
           </div>
         </li>
       </ul>
-
+      <div v-if="c.replies && c.replies.length > 0">
+        <ul>
+          <li v-for="reply in c.replies" :key="reply.id">
+            <p>{{ reply.text }}</p>
+          </li>
+        </ul>
+      </div>
       <div v-if="isPreviewVisible" class="preview-box">
         <h4>Preview:</h4>
         <div class="preview-content">
@@ -199,7 +205,7 @@ async function submitReply(parentId: string) {
       userAvatar: user.value.photoURL,
       text: replyText.value.trim(),
       createdAt: new Date(),
-      parentId: parentId, // Trả lời comment này
+      parentId: parentId, // Trả lời cho comment này
       mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Handle media for replies
     })
     replyText.value = ''
@@ -249,7 +255,7 @@ onMounted(() => {
   // Lắng nghe thay đổi trạng thái đăng nhập
   onAuthStateChanged(auth, (currentUser) => {
     user.value = currentUser
-    console.log(user.value);  // Kiểm tra thông tin người dùng khi thay đổi
+    console.log(user.value) // Kiểm tra thông tin người dùng khi thay đổi
   })
 
   const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'))
@@ -258,6 +264,8 @@ onMounted(() => {
       id: doc.id,
       ...doc.data(),
     }))
+
+    // Tạo mảng replies cho mỗi comment
     comments.value.forEach((comment) => {
       comment.replies = comments.value.filter((c) => c.parentId === comment.id)
     })
