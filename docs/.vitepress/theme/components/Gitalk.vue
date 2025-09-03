@@ -489,7 +489,7 @@ textarea:disabled {
   height: 35px;
   border-radius: 50%;
   margin-right: 15px;
-  cursor: pointer;  /* Thêm thuộc tính này để avatar có thể được nhấn */
+  cursor: pointer; /* Thêm thuộc tính này để avatar có thể được nhấn */
 }
 .comment-content {
   display: flex;
