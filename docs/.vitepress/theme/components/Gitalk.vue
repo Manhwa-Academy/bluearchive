@@ -12,7 +12,11 @@
       <div v-if="user">
         <!-- Hiển thị khi đã đăng nhập -->
         <div class="user-info">
-          <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="user-avatar" />
+          <img
+            :src="user?.photoURL || 'default-avatar-url'"
+            alt="User Avatar"
+            class="user-avatar"
+          />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
           <button class="logout-button" @click="signOut">Đăng xuất</button>
         </div>
@@ -44,7 +48,11 @@
       <!-- Hiển thị bình luận cho tất cả người dùng, dù họ có đăng nhập hay không -->
       <h3>Bình luận đã gửi ({{ comments.length }}):</h3>
       <ul>
-        <li v-for="(c, index) in comments.filter((comment) => !comment.parentId)" :key="index" class="comment-item">
+        <li
+          v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
+          :key="index"
+          class="comment-item"
+        >
           <div class="comment">
             <img :src="c.userAvatar || 'default-avatar-url'" alt="Avatar" class="comment-avatar" />
             <div class="comment-content">
@@ -71,7 +79,11 @@
           <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
-                <img :src="reply.userAvatar || 'default-avatar-url'" alt="Avatar" class="comment-avatar" />
+                <img
+                  :src="reply.userAvatar || 'default-avatar-url'"
+                  alt="Avatar"
+                  class="comment-avatar"
+                />
                 <div class="comment-content">
                   <strong>{{ reply.userName || 'Người dùng ẩn danh' }}</strong>
                   <p>{{ reply.text }}</p>
@@ -79,13 +91,22 @@
                   <!-- Render Media -->
                   <div v-if="reply.mediaUrl">
                     <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
-                    <video v-if="isVideo(reply.mediaUrl)" :src="reply.mediaUrl" controls class="media"></video>
+                    <video
+                      v-if="isVideo(reply.mediaUrl)"
+                      :src="reply.mediaUrl"
+                      controls
+                      class="media"
+                    ></video>
                     <img v-if="isGif(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
                   </div>
 
                   <div class="comment-actions">
-                    <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">Xóa</button>
-                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">Trả lời</button>
+                    <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">
+                      Xóa
+                    </button>
+                    <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
+                      Trả lời
+                    </button>
                   </div>
                 </div>
               </div>
@@ -109,15 +130,17 @@
       <div v-if="isPreviewVisible" class="preview-box">
         <h4>Preview:</h4>
         <div class="preview-content">
-          <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="preview-avatar" />
+          <img
+            :src="user?.photoURL || 'default-avatar-url'"
+            alt="User Avatar"
+            class="preview-avatar"
+          />
           <p>{{ previewText }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
@@ -249,21 +272,23 @@ async function confirmDelete(commentId: string) {
 }
 function replyToComment(commentId: string) {
   isReplyingToCommentId.value = commentId
-  replyText.value = ''
+  replyText.value = '' // Đặt lại phần trả lời mỗi khi nhấn trả lời
 }
 
 async function submitReply(parentId: string) {
   if (!replyText.value.trim()) return
+
   try {
     await addDoc(collection(db, 'comments'), {
       userId: user.value.uid,
-      userName: user.value.displayName || 'Người dùng ẩn danh', // Tên mặc định
+      userName: user.value.displayName || 'Người dùng ẩn danh',
       userAvatar: user.value.photoURL,
       text: replyText.value.trim(),
       createdAt: new Date(),
-      parentId: parentId, // Trả lời comment này
+      parentId: parentId, // Trả lời bình luận này
       mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Handle media for replies
     })
+
     replyText.value = ''
     isReplyingToCommentId.value = null
   } catch (err) {
