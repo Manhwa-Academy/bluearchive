@@ -71,15 +71,24 @@
             <button @click="submitReply(c.id)">Gửi trả lời</button>
             <button @click="cancelReply">Hủy</button>
           </div>
+
+          <!-- Hiển thị các câu trả lời -->
+          <div v-if="c.replies && c.replies.length > 0">
+            <ul>
+              <li v-for="reply in c.replies" :key="reply.id">
+                <div class="comment">
+                  <img :src="reply.userAvatar" alt="Avatar" class="comment-avatar" />
+                  <div class="comment-content">
+                    <strong>{{ reply.userName }}</strong>
+                    <p>{{ reply.text }}</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
         </li>
       </ul>
-      <div v-if="c.replies && c.replies.length > 0">
-        <ul>
-          <li v-for="reply in c.replies" :key="reply.id">
-            <p>{{ reply.text }}</p>
-          </li>
-        </ul>
-      </div>
+
       <div v-if="isPreviewVisible" class="preview-box">
         <h4>Preview:</h4>
         <div class="preview-content">
@@ -205,7 +214,7 @@ async function submitReply(parentId: string) {
       userAvatar: user.value.photoURL,
       text: replyText.value.trim(),
       createdAt: new Date(),
-      parentId: parentId, // Trả lời cho comment này
+      parentId: parentId, // Trả lời comment này
       mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Handle media for replies
     })
     replyText.value = ''
@@ -265,7 +274,7 @@ onMounted(() => {
       ...doc.data(),
     }))
 
-    // Tạo mảng replies cho mỗi comment
+    // Gắn các câu trả lời vào mỗi bình luận
     comments.value.forEach((comment) => {
       comment.replies = comments.value.filter((c) => c.parentId === comment.id)
     })
