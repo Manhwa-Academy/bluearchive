@@ -120,19 +120,3 @@ a {
   }
 }
 </style>
-<script setup>
-import { useData } from 'vitepress'
-import GitalkComment from './GitalkComment.vue'
-
-const { page } = useData()
-</script>
-
-<template>
-  <Layout>
-    <!-- Nội dung trang -->
-    <Content />
-
-    <!-- Hiện Gitalk nếu là bài viết -->
-    <GitalkComment v-if="page.relativePath?.includes('posts/')" />
-  </Layout>
-</template>
