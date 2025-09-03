@@ -59,8 +59,8 @@
               </div>
 
               <div class="comment-actions">
-                <!-- Hiển thị nút Xóa cho tất cả người dùng đã đăng nhập -->
-                <button v-if="user?.uid" @click="confirmDelete(c.id)">Xóa</button>
+                <!-- Chỉ hiển thị nút Xóa nếu người dùng đã đăng nhập và là chủ sở hữu của bình luận -->
+                <button v-if="user?.uid === c.userId" @click="confirmDelete(c.id)">Xóa</button>
                 <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">Trả lời</button>
               </div>
             </div>
@@ -92,7 +92,10 @@
                   </div>
 
                   <div class="comment-actions">
-                    <button v-if="user?.uid" @click="confirmDelete(reply.id)">Xóa</button>
+                    <!-- Chỉ hiển thị nút Xóa nếu người dùng đã đăng nhập và là chủ sở hữu của phản hồi -->
+                    <button v-if="user?.uid === reply.userId" @click="confirmDelete(reply.id)">
+                      Xóa
+                    </button>
                     <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
                       Trả lời
                     </button>
@@ -240,18 +243,25 @@ async function deleteComment(commentId: string) {
 
   try {
     const commentRef = doc(db, 'comments', commentId)
-    await deleteDoc(commentRef)
-    alert('Bình luận đã bị xóa thành công.')
+    const commentDoc = await getDoc(commentRef)
+
+    // Kiểm tra xem người dùng có phải là chủ sở hữu của bình luận hay không
+    if (commentDoc.exists() && commentDoc.data().userId === user.value.uid) {
+      await deleteDoc(commentRef)
+      alert('Bình luận đã bị xóa thành công.')
+    } else {
+      alert('Bạn không có quyền xóa bình luận này.')
+    }
   } catch (err) {
     alert('Xóa bình luận thất bại: ' + err.message)
   }
 }
+
 async function confirmDelete(commentId: string) {
   if (confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
     await deleteComment(commentId)
   }
 }
-
 function replyToComment(commentId: string) {
   isReplyingToCommentId.value = commentId
   replyText.value = ''
