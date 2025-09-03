@@ -72,7 +72,7 @@
             <button @click="cancelReply">Hủy</button>
           </div>
 
-          <!-- Hiển thị các câu trả lời -->
+          <!-- Hiển thị câu trả lời lồng vào nhau -->
           <div v-if="c.replies && c.replies.length > 0">
             <ul>
               <li v-for="reply in c.replies" :key="reply.id">
@@ -81,6 +81,27 @@
                   <div class="comment-content">
                     <strong>{{ reply.userName }}</strong>
                     <p>{{ reply.text }}</p>
+
+                    <!-- Render Media -->
+                    <div v-if="reply.mediaUrl">
+                      <img v-if="isImage(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
+                      <video
+                        v-if="isVideo(reply.mediaUrl)"
+                        :src="reply.mediaUrl"
+                        controls
+                        class="media"
+                      ></video>
+                      <img v-if="isGif(reply.mediaUrl)" :src="reply.mediaUrl" class="media" />
+                    </div>
+
+                    <div class="comment-actions">
+                      <button v-if="user?.uid === reply.userId" @click="deleteComment(reply.id)">
+                        Xóa
+                      </button>
+                      <button v-if="user?.uid !== reply.userId" @click="replyToComment(reply.id)">
+                        Trả lời
+                      </button>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -214,7 +235,7 @@ async function submitReply(parentId: string) {
       userAvatar: user.value.photoURL,
       text: replyText.value.trim(),
       createdAt: new Date(),
-      parentId: parentId, // Trả lời comment này
+      parentId: parentId, // Đảm bảo lưu đúng parentId
       mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Handle media for replies
     })
     replyText.value = ''
