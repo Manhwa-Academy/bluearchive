@@ -19,12 +19,18 @@
             :src="user?.photoURL || 'default-avatar-url'"
             alt="User Avatar"
             class="comment-avatar"
-            @click="getGitHubInfo"
+            @click="
+              () => {
+                console.log('Avatar clicked')
+                getGitHubInfo()
+              }
+            "
           />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
           <button class="logout-button" @click="signOut">Đăng xuất</button>
         </div>
 
+        <!-- Hiển thị thông tin GitHub khi nhấn vào avatar -->
         <!-- Hiển thị thông tin GitHub khi nhấn vào avatar -->
         <div v-if="githubUserInfo" class="github-info">
           <p>Tên GitHub: {{ githubUserInfo.login }}</p>
@@ -239,11 +245,15 @@ async function submitComment() {
     alert('Gửi bình luận lỗi: ' + err.message)
   }
 }
-async function getGitHubInfo(userName) {
+async function getGitHubInfo() {
+  console.log('Avatar đã được nhấn') // Kiểm tra xem hàm có được gọi không
+  const githubUsername = user.value ? user.value.displayName : 'defaultUsername' // Lấy tên người dùng GitHub từ user hoặc mặc định
   try {
-    const response = await fetch(`https://api.github.com/users/${userName}`)
+    const response = await fetch(`https://api.github.com/users/${githubUsername}`)
     if (response.ok) {
-      githubUserInfo.value = await response.json() // Lưu thông tin GitHub vào biến
+      const data = await response.json()
+      console.log(data) // Kiểm tra dữ liệu trả về từ API
+      githubUserInfo.value = data // Lưu thông tin GitHub vào biến
     } else {
       alert('Không thể lấy thông tin GitHub.')
     }
@@ -593,6 +603,7 @@ li {
   padding: 10px;
   margin-top: 15px;
   border-radius: 5px;
+  display: block; /* Đảm bảo phần tử này hiển thị */
 }
 
 .github-info a {
