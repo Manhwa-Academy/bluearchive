@@ -32,6 +32,7 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "gitalk": "^1.8.0",
     "gray-matter": "^4.0.3",
     "markdown-it-custom-attrs": "^1.0.2",
     "md5": "^2.3.0",
