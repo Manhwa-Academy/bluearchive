@@ -1,6 +1,6 @@
 import { defineConfigWithTheme } from 'vitepress'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
-import { defineConfig } from 'vite'
+import Gitalk from 'gitalk'
 
 export interface ThemeConfig {
   menuList: { name: string; url: string }[]
@@ -19,30 +19,10 @@ export interface ThemeConfig {
   admin: string[]
 }
 
-export default defineConfig({
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            return 'vendor' // Tạo chunk riêng cho các thư viện trong node_modules
-          }
-        }
-      }
-    },
-    chunkSizeWarningLimit: 1000, // Tăng giới hạn kích thước chunk nếu cần
-  },
-  plugins: [
-    // Thêm các plugin Vite nếu cần thiết
-  ],
-  // Các cấu hình khác của Vite có thể đi vào đây
-})
-
-// Cấu hình cho VitePress với theme
-export const vitepressConfig = defineConfigWithTheme<ThemeConfig>({
+export default defineConfigWithTheme<ThemeConfig>({
   lang: 'zh-CN',
   ignoreDeadLinks: true,
-  cleanUrls: false, // ✅ Thêm để tránh lỗi 404 khi vào các path như /tags/
+ cleanUrls: false, // ✅ Thêm để tránh lỗi 404 khi vào các path như /tags/
 
   head: [
     ['link', { rel: 'shortcut icon', href: '/favicon.ico' }],
@@ -50,7 +30,10 @@ export const vitepressConfig = defineConfigWithTheme<ThemeConfig>({
     ['script', { src: 'https://unpkg.com/gitalk/dist/gitalk.min.js' }],
     ['link', { rel: 'stylesheet', href: '/bluearchive/font/Blueaka/Blueaka.css' }],
     ['link', { rel: 'stylesheet', href: '/bluearchive/font/Blueaka_Bold/Blueaka_Bold.css' }],
-    ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css' }],
+    [
+      'link',
+      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css' },
+    ],
     ['script', { src: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js' }],
   ],
 
@@ -78,7 +61,7 @@ export const vitepressConfig = defineConfigWithTheme<ThemeConfig>({
     spineVoiceLang: 'jp',
     footerName: 'Sensei',
     poweredList: [
-      { name: 'Manhwa-Academy', url: 'https://github.com/Manhwa-Academy' },
+      { name: 'Manhwa-Acedemy', url: 'https://github.com/Manhwa-Academy' },
       { name: 'GitHub ', url: 'https://github.com/Manhwa-Academy/bluearchive' },
     ],
     clientID: 'Iv23liTL4NDWi6eqWtth',
