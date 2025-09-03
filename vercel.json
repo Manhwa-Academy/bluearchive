@@ -1,21 +1,4 @@
 {
   "buildCommand": "pnpm run docs:build",
-  "outputDirectory": "docs/.vitepress/dist",
-  "version": 2,
-  "builds": [
-    {
-      "src": "docs/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/auth/github/callback",
-      "dest": "/api/auth/github/callback.js"
-    }
-  ]
+  "outputDirectory": "docs/.vitepress/dist"
 }
