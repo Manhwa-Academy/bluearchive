@@ -1,44 +1,47 @@
 <template>
   <div class="github-login-comment">
     <div class="login-area" v-if="!user">
-      <!-- Hiển thị textbox và nút Login khi chưa đăng nhập -->
+      <!-- Chỉ hiển thị textbox nhập bình luận và nút "Login with GitHub" khi chưa đăng nhập -->
       <textarea v-model="comment" placeholder="Nhập bình luận..." disabled></textarea>
       <button class="login-button" @click="signInWithGitHub">Login with GitHub</button>
       <br /><br />
       <button class="preview-button" :disabled="!comment.trim()">Preview</button>
     </div>
 
-    <div class="comment-area" v-if="user">
-      <!-- Hiển thị khi đã đăng nhập -->
-      <div class="user-info">
-        <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="user-avatar" />
-        <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
-        <button class="logout-button" @click="signOut">Đăng xuất</button>
+    <div class="comment-area">
+      <div v-if="user">
+        <!-- Hiển thị khi đã đăng nhập -->
+        <div class="user-info">
+          <img :src="user?.photoURL || 'default-avatar-url'" alt="User Avatar" class="user-avatar" />
+          <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
+          <button class="logout-button" @click="signOut">Đăng xuất</button>
+        </div>
+
+        <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
+
+        <!-- Media Input -->
+        <div class="media-input">
+          <input
+            v-model="mediaUrl"
+            type="text"
+            placeholder="Insert image, gif, or video URL"
+            @keydown.enter.prevent="embedMedia"
+          />
+          <br /><br />
+          <button @click="embedMedia">Embed Media</button>
+        </div>
+        <br />
+        <div class="button-group">
+          <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">
+            Gửi bình luận
+          </button>
+          <button class="preview-button" @click="togglePreview" :disabled="!comment.trim()">
+            Preview
+          </button>
+        </div>
       </div>
 
-      <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
-
-      <!-- Media Input -->
-      <div class="media-input">
-        <input
-          v-model="mediaUrl"
-          type="text"
-          placeholder="Insert image, gif, or video URL"
-          @keydown.enter.prevent="embedMedia"
-        />
-        <br /><br />
-        <button @click="embedMedia">Embed Media</button>
-      </div>
-      <br />
-      <div class="button-group">
-        <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">
-          Gửi bình luận
-        </button>
-        <button class="preview-button" @click="togglePreview" :disabled="!comment.trim()">
-          Preview
-        </button>
-      </div>
-
+      <!-- Hiển thị bình luận cho tất cả người dùng, dù họ có đăng nhập hay không -->
       <h3>Bình luận đã gửi ({{ comments.length }}):</h3>
       <ul>
         <li v-for="(c, index) in comments.filter((comment) => !comment.parentId)" :key="index" class="comment-item">
@@ -57,6 +60,7 @@
               </div>
 
               <div class="comment-actions">
+                <!-- Hiển thị nút Xóa cho người dùng đã đăng nhập và là chủ sở hữu bình luận -->
                 <button v-if="user?.uid === c.userId" @click="confirmDelete(c.id)">Xóa</button>
                 <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">Trả lời</button>
               </div>
