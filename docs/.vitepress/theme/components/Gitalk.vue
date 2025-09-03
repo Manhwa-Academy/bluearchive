@@ -116,11 +116,11 @@
           </button>
 
           <!-- Hiển thị phần trả lời -->
-          <div v-if="isReplyingToCommentId === c.id" class="reply-box">
-            <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
-            <button @click="submitReply(c.id)">Gửi trả lời</button>
-            <button @click="cancelReply">Hủy</button>
-          </div>
+          <ReplyBox
+            :isReplyingToCommentId="isReplyingToCommentId"
+            @submitReply="submitReply"
+            @cancelReply="cancelReply"
+          />
         </div>
       </ul>
 
@@ -161,6 +161,7 @@ import {
 } from 'firebase/firestore'
 import { app } from '../../firebase.js'
 import { formatDistanceToNow } from 'date-fns'
+import ReplyBox from './ReplyBox.vue' // Import ReplyBox component
 
 const auth = getAuth(app)
 const db = getFirestore(app)
@@ -275,7 +276,6 @@ async function confirmDelete(commentId: string) {
 
 function replyToComment(commentId: string) {
   isReplyingToCommentId.value = commentId
-  console.log('Replying to comment ID:', isReplyingToCommentId.value)
   replyText.value = '' // Reset phần trả lời mỗi khi nhấn trả lời
 }
 
@@ -315,6 +315,7 @@ function embedMedia() {
       const validGifUrl = /\.gif$/i.test(url)
 
       if (validImageUrl || validVideoUrl || validGifUrl) {
+        // Store the media URL in comment
         mediaUrl.value = url
       } else {
         alert('Invalid media URL. Please use a valid image, gif, or video URL.')
