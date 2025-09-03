@@ -24,10 +24,10 @@
           placeholder="Insert image, gif, or video URL"
           @keydown.enter.prevent="embedMedia"
         />
-        <br><br>
+        <br /><br />
         <button @click="embedMedia">Embed Media</button>
       </div>
-<br>
+      <br />
       <div class="button-group">
         <button class="submit-button" @click="submitComment" :disabled="!comment.trim()">
           Gửi bình luận
@@ -246,8 +246,10 @@ function isGif(url: string) {
 }
 
 onMounted(() => {
+  // Lắng nghe thay đổi trạng thái đăng nhập
   onAuthStateChanged(auth, (currentUser) => {
     user.value = currentUser
+    console.log(user.value) // Kiểm tra thông tin người dùng khi thay đổi
   })
 
   const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'))
