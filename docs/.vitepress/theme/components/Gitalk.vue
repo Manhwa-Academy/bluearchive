@@ -7,6 +7,11 @@
       <button class="preview-button" :disabled="!comment.trim()">Preview</button>
     </div>
 
+    <!-- Khi người dùng đã đăng nhập, hiển thị thông báo đăng nhập thành công -->
+    <div v-if="isLoggedIn" class="login-success-message">
+      <p>Đăng nhập thành công!</p>
+    </div>
+
     <div class="comment-area">
       <div v-if="user">
         <div class="user-info">
