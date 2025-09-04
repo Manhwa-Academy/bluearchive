@@ -22,31 +22,39 @@
           <button class="logout-button" @click="signOut">Đăng xuất</button>
         </div>
 
-        <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
-
-        <!-- Nút chọn Emoji -->
-        <button class="emoji-btn" @click="toggleEmojiPicker">
-          <i class="fas fa-smile"></i>
-          <!-- Dùng Font Awesome icon -->
-        </button>
-
-        <!-- Bảng chọn Emoji -->
-        <div v-if="emojiPickerVisible" class="emoji-picker">
-          <button v-for="emoji in emojis" :key="emoji" @click="addEmoji(emoji)">
-            {{ emoji }}
+        <!-- Textarea bình luận với biểu tượng mặt cười -->
+        <div class="textarea-wrapper">
+          <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
+          <button class="emoji-btn" @click="toggleEmojiPicker">
+            <i class="fas fa-smile"></i>
+            <!-- Biểu tượng mặt cười -->
           </button>
         </div>
 
+        <div class="emoji-categories">
+          <button @click="currentCategory = 'Cảm xúc'">Cảm xúc</button>
+          <button @click="currentCategory = 'Động vật'">Động vật</button>
+          <button @click="currentCategory = 'Thực phẩm'">Thực phẩm</button>
+          <button @click="currentCategory = 'Hoạt động'">Hoạt động</button>
+        </div>
+
+        <!-- Bảng chọn Emoji -->
+        <div v-if="emojiPickerVisible" class="emoji-picker">
+          <button class="close-emoji-picker" @click="toggleEmojiPicker">X</button>
+          <div class="emoji-row" v-for="(emoji, index) in emojis[currentCategory]" :key="index">
+            <button @click="addEmoji(emoji)">{{ emoji }}</button>
+          </div>
+        </div>
         <!-- Media Input -->
         <div class="media-input">
           <input
             v-model="mediaUrl"
             type="text"
-            placeholder="Insert image, gif, or video URL"
+            placeholder="Image, Gif, or Video URL"
             @keydown.enter.prevent="embedMedia"
           />
           <br /><br />
-          <button @click="embedMedia">Embed Media</button>
+          <button @click="embedMedia">Tạo từ URL</button>
         </div>
         <br />
         <div class="button-group">
@@ -216,19 +224,151 @@ import { formatDistanceToNow } from 'date-fns'
 import { getDoc } from 'firebase/firestore'
 import { updateDoc } from 'firebase/firestore'
 
-const emojiPickerVisible = ref(false)
-const emojis = ['😊', '😂', '😍', '🥺', '😎', '😢', '👍', '❤️', '🤩']
+const currentCategory = ref('Cảm xúc') // Mặc định là "Cảm xúc"
+
+const emojiPickerVisible = ref(false) // Hiển thị bảng emoji
+const comment = ref('')
+// Danh sách emoji
+const emojis = {
+  'Cảm xúc': [
+    '😊',
+    '😂',
+    '😍',
+    '🥺',
+    '😎',
+    '😢',
+    '😜',
+    '😇',
+    '😝',
+    '😏',
+    '🤗',
+    '😻',
+    '😽',
+    '🤔',
+    '🤩',
+    '🥳',
+    '🙃',
+    '🤤',
+    '😈',
+    '💀',
+    '😤',
+    '😡',
+    '😶',
+    '🥴',
+    '😷',
+    '🥲',
+    '😑',
+    '😓',
+    '😕',
+    '😶‍🌫️',
+  ],
+
+  'Động vật': [
+    '🐶',
+    '🐱',
+    '🐭',
+    '🐹',
+    '🐰',
+    '🦊',
+    '🐻',
+    '🐼',
+    '🦁',
+    '🐯',
+    '🐨',
+    '🐮',
+    '🐷',
+    '🐸',
+    '🐵',
+    '🙈',
+    '🙉',
+    '🙊',
+    '🦄',
+    '🐧',
+    '🐦',
+    '🐤',
+    '🐣',
+    '🦉',
+    '🦆',
+    '🐺',
+    '🐗',
+    '🐴',
+  ],
+
+  'Thực phẩm': [
+    '🍕',
+    '🍩',
+    '🍎',
+    '🥑',
+    '🍓',
+    '🍉',
+    '🍇',
+    '🍒',
+    '🍍',
+    '🍫',
+    '🍔',
+    '🍟',
+    '🍪',
+    '🍦',
+    '🍰',
+    '🍿',
+    '🥞',
+    '🥧',
+    '🍽️',
+    '🍺',
+    '🍻',
+    '🥂',
+    '🍷',
+    '🍸',
+    '🍹',
+    '🍷',
+    '🥃',
+    '🍾',
+    '🍽️',
+    '🍴',
+  ],
+
+  'Hoạt động': [
+    '⚽',
+    '🏀',
+    '🏈',
+    '⚾',
+    '🎾',
+    '🏐',
+    '🏉',
+    '🎱',
+    '🎮',
+    '🎲',
+    '🎯',
+    '🏆',
+    '🎻',
+    '🎸',
+    '🎧',
+    '🎷',
+    '🎺',
+    '🥁',
+    '🏅',
+    '🏋️‍♀️',
+    '🏃‍♀️',
+    '🏃‍♂️',
+    '🚴‍♀️',
+    '🚴‍♂️',
+    '🏇',
+    '🤺',
+    '🤾‍♀️',
+    '🤾‍♂️',
+  ],
+}
+
 // Toggle hiển thị bảng emoji
 const toggleEmojiPicker = () => {
   emojiPickerVisible.value = !emojiPickerVisible.value
 }
-// Chèn emoji vào bình luận
-const addEmoji = (emoji) => {
-  comment.value += emoji
-  emojiPickerVisible.value = false
+
+// Add emoji to comment
+const addEmoji = (emoji: string) => {
+  comment.value += emoji // Thêm emoji vào nội dung bình luận
+  emojiPickerVisible.value = false // Đóng bảng emoji sau khi chọn
 }
-
-
 
 const isPinFormVisible = ref(false) // Kiểm tra form ghim có hiển thị hay không
 const currentCommentId = ref(null) // Lưu ID của bình luận đang ghim
@@ -320,7 +460,7 @@ const auth = getAuth(app)
 const db = getFirestore(app)
 const isEditingCommentId = ref<string | null>(null) // Theo dõi bình luận đang chỉnh sửa
 const user = ref<any | null>(null)
-const comment = ref('')
+
 const comments = ref<any[]>([])
 const mediaUrl = ref('') // For media URL input
 const previewText = ref('')
@@ -358,23 +498,33 @@ function signInWithGitHub() {
   signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message))
 }
 async function submitEditComment(commentId: string) {
-  if (!comment.value.trim()) return
+  if (!comment.value.trim()) return // Kiểm tra nếu không có nội dung bình luận
 
   try {
-    const commentRef = doc(db, 'comments', commentId)
+    const commentRef = doc(db, 'comments', commentId) // Lấy tham chiếu bình luận cần chỉnh sửa
+
+    // Kiểm tra xem bình luận có tồn tại trong cơ sở dữ liệu không
+    const commentDoc = await getDoc(commentRef)
+    if (!commentDoc.exists()) {
+      alert('Bình luận không tồn tại!')
+      return
+    }
+
+    // Cập nhật bình luận trong cơ sở dữ liệu
     await updateDoc(commentRef, {
       text: comment.value.trim(),
       updatedAt: new Date(), // Thêm thời gian chỉnh sửa
     })
 
-    // Sau khi cập nhật, cập nhật lại giao diện
-    isEditingCommentId.value = null // Reset trạng thái chỉnh sửa
-    comment.value = '' // Reset nội dung
+    // Sau khi cập nhật, reset trạng thái
+    isEditingCommentId.value = null // Đặt lại trạng thái chỉnh sửa
+    comment.value = '' // Reset nội dung textarea
     alert('Bình luận đã được chỉnh sửa thành công!') // Thông báo khi chỉnh sửa
   } catch (err) {
-    alert('Sửa bình luận lỗi: ' + err.message)
+    alert('Sửa bình luận lỗi: ' + err.message) // Thông báo lỗi nếu có
   }
 }
+
 function sortComments() {}
 function editComment(commentId: string) {
   const commentToEdit = comments.value.find((c) => c.id === commentId)
@@ -574,6 +724,10 @@ onMounted(() => {
 .login-area {
   text-align: center;
   margin-bottom: 20px;
+}
+.textarea-wrapper {
+  position: relative; /* Để có thể đặt icon mặt cười ở vị trí bên trong */
+  width: 100%;
 }
 /* Textarea */
 textarea {
@@ -887,23 +1041,31 @@ li {
   font-weight: bold;
 }
 .emoji-btn {
+  position: absolute;
+  right: 10px;
+  top: 40%;
+  transform: translateY(-50%);
   background: none;
   border: none;
-  color: #f0c674;
   font-size: 20px;
   cursor: pointer;
+  color: #f0c674; /* Bạn có thể thay đổi màu */
 }
-
 .emoji-picker {
   position: absolute;
-  top: 40px;
+  top: 40px; /* Điều chỉnh khoảng cách từ textarea */
+  right: 0; /* Đặt emoji picker ở bên phải của textarea */
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Đảm bảo emoji xuống dòng khi hết không gian */
   gap: 10px;
+  z-index: 1000;
+  padding-top: 30px; /* Điều chỉnh khoảng cách trên của bảng emoji */
+  padding-right: 30px; /* Điều chỉnh khoảng cách phải */
+  width: 300px;
 }
 
 .emoji-picker button {
@@ -911,11 +1073,57 @@ li {
   border: none;
   font-size: 20px;
   cursor: pointer;
+  width: 40px; /* Kích thước của mỗi emoji */
+  height: 40px; /* Kích thước của mỗi emoji */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px; /* Đảm bảo khoảng cách giữa các emoji khi xuống dòng */
 }
+
+.emoji-picker button:nth-child(n + 7) {
+  margin-top: 10px; /* Khi có nhiều hơn 6 emoji, chúng sẽ xuống hàng */
+}
+
+.comment-area {
+  position: relative;
+}
+
 button {
   padding: 10px;
   margin: 5px;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.close-emoji-picker {
+  position: absolute;
+  top: 10px;  /* Cách từ trên xuống */
+  right: 10px;  /* Cách từ phải vào */
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #000;
+  cursor: pointer;
+}
+.close-emoji-picker:hover {
+  color: #ff0000;  /* Đổi màu khi hover */
+}
+.emoji-categories {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.emoji-categories button {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.emoji-categories button:hover {
+  background-color: #ddd;
 }
 </style>
