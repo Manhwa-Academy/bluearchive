@@ -45,7 +45,7 @@ export default defineConfigWithTheme<ThemeConfig>({
   themeConfig: {
     menuList: [
       { name: 'Trang chủ', url: '' },
-      { name: 'Thẻ', url: '/tags/' },
+      { name: 'Thẻ', url: 'tags/' },
     ],
     videoBanner: false,
     name: 'Blog của Sensei',
