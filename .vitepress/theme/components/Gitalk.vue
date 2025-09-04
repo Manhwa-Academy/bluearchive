@@ -36,15 +36,26 @@
           <button @click="currentCategory = 'Động vật'">Động vật</button>
           <button @click="currentCategory = 'Thực phẩm'">Thực phẩm</button>
           <button @click="currentCategory = 'Hoạt động'">Hoạt động</button>
+          <button @click="currentCategory = 'Giao thông'">Giao thông</button>
+          <button @click="currentCategory = 'Thiên nhiên'">Thiên nhiên</button>
         </div>
 
         <!-- Bảng chọn Emoji -->
         <div v-if="emojiPickerVisible" class="emoji-picker">
           <button class="close-emoji-picker" @click="toggleEmojiPicker">X</button>
-          <div class="emoji-row" v-for="(emoji, index) in emojis[currentCategory]" :key="index">
+
+          <!-- Hiển thị emoji theo trang -->
+          <div v-for="(emoji, index) in currentPageEmojis" :key="index">
             <button @click="addEmoji(emoji)">{{ emoji }}</button>
           </div>
+
+          <!-- Nút chuyển trang -->
+          <div class="page-buttons">
+            <button @click="prevPage" :disabled="currentPage === 1">Trang trước</button>
+            <button @click="nextPage" :disabled="currentPage === totalPages">Trang sau</button>
+          </div>
         </div>
+
         <!-- Media Input -->
         <div class="media-input">
           <input
@@ -227,6 +238,31 @@ import { updateDoc } from 'firebase/firestore'
 const currentCategory = ref('Cảm xúc') // Mặc định là "Cảm xúc"
 
 const emojiPickerVisible = ref(false) // Hiển thị bảng emoji
+// Tổng số trang
+const totalPages = computed(() => {
+  return Math.ceil(emojis[currentCategory.value].length / emojisPerPage)
+})
+const currentPage = ref(1) // Mặc định là trang 1
+const emojisPerPage = 30 // Số emoji mỗi trang
+// Danh sách emoji cần hiển thị trong trang hiện tại
+const currentPageEmojis = computed(() => {
+  const startIndex = (currentPage.value - 1) * emojisPerPage
+  const endIndex = startIndex + emojisPerPage
+  return emojis[currentCategory.value].slice(startIndex, endIndex)
+})
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
+}
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
 const comment = ref('')
 // Danh sách emoji
 const emojis = {
@@ -256,11 +292,26 @@ const emojis = {
     '😶',
     '🥴',
     '😷',
-    '🥲',
     '😑',
     '😓',
     '😕',
     '😶‍🌫️',
+    '🥰',
+    '😬',
+    '🤯',
+    '😳',
+    '😒',
+    '😱',
+    '😌',
+    '🤪',
+    '😪',
+    '🤧',
+    '🤫',
+    '🤭',
+    '😋',
+    '🤠',
+    '🥺',
+    '😇',
   ],
 
   'Động vật': [
@@ -292,6 +343,25 @@ const emojis = {
     '🐺',
     '🐗',
     '🐴',
+    '🐢',
+    '🦎',
+    '🐍',
+    '🦋',
+    '🐝',
+    '🐞',
+    '🦗',
+    '🦀',
+    '🐘',
+    '🐆',
+    '🦓',
+    '🐅',
+    '🦒',
+    '🐏',
+    '🦙',
+    '🦇',
+    '🐉',
+    '🦢',
+    '🦃',
   ],
 
   'Thực phẩm': [
@@ -325,6 +395,34 @@ const emojis = {
     '🍾',
     '🍽️',
     '🍴',
+    '🌮',
+    '🍣',
+    '🍜',
+    '🥗',
+    '🍲',
+    '🍝',
+    '🍔',
+    '🥪',
+    '🥨',
+    '🍥',
+    '🥒',
+    '🍠',
+    '🍝',
+    '🍅',
+    '🌯',
+    '🥙',
+    '🍍',
+    '🍒',
+    '🍑',
+    '🍋',
+    '🍊',
+    '🍏',
+    '🍌',
+    '🍍',
+    '🍈',
+    '🥥',
+    '🍍',
+    '🍑',
   ],
 
   'Hoạt động': [
@@ -356,6 +454,204 @@ const emojis = {
     '🤺',
     '🤾‍♀️',
     '🤾‍♂️',
+    '🏄‍♀️',
+    '🏄‍♂️',
+    '🚣‍♀️',
+    '🚣‍♂️',
+    '🤽‍♀️',
+    '🤽‍♂️',
+    '🤸‍♀️',
+    '🤸‍♂️',
+    '🤾‍♀️',
+    '🤾‍♂️',
+    '🚶‍♀️',
+    '🚶‍♂️',
+    '🧘‍♀️',
+    '🧘‍♂️',
+    '⛷️',
+    '🏌️‍♀️',
+    '🏌️‍♂️',
+    '🏊‍♀️',
+    '🏊‍♂️',
+    '🥋',
+    '🏆',
+    '🎯',
+    '🛹',
+    '🛶',
+    '🚴‍♀️',
+    '🚴‍♂️',
+    '🏂',
+    '⛹️‍♀️',
+    '⛹️‍♂️',
+    '🧗‍♀️',
+    '🧗‍♂️',
+    '🤼‍♀️',
+    '🤼‍♂️',
+    '🎲',
+    '🎯',
+    '🧘‍♀️',
+    '🧘‍♂️',
+    '🎽',
+    '🚴‍♀️',
+    '🚴‍♂️',
+    '🏌️‍♀️',
+    '🏌️‍♂️',
+    '🕹️',
+    '🎮',
+    '👾',
+    '🖥️',
+    '💻',
+    '🎧',
+    '💥',
+    '🌸',
+    '⚔️',
+    '🗡️',
+    '🛡️',
+    '👑',
+    '👘',
+    '🦸‍♂️',
+    '🦸‍♀️',
+    '🦹‍♂️',
+    '🦹‍♀️',
+    '👨‍🚀',
+    '👩‍🚀',
+    '🐉',
+    '🦄',
+    '👾',
+    '🧛‍♂️',
+    '🧛‍♀️',
+    '👻',
+    '🎤',
+    '🎬',
+    '🍥',
+    '🍣',
+    '🍜',
+    '🍱',
+    '🥡',
+    '🍡',
+    '🦁',
+    '🦖',
+    '🦥',
+    '🦛',
+    '🐒',
+    '🦆',
+    '🐺',
+    '🦦',
+    '🐅',
+    '🐍',
+    '🦄',
+    '🦋',
+    '🐞',
+    '🦗',
+    '🐝',
+    '🐜',
+  ],
+
+  'Giao thông': [
+    '🚗',
+    '🚙',
+    '🚕',
+    '🚓',
+    '🚑',
+    '🚒',
+    '🚐',
+    '🚚',
+    '🚛',
+    '🚜',
+    '🏎️',
+    '🚏',
+    '🚦',
+    '🚧',
+    '⛔',
+    '🚏',
+    '🛣️',
+    '🛤️',
+    '🚢',
+    '🚤',
+    '⛴️',
+    '🛳️',
+    '🚢',
+    '⛵',
+    '🛶',
+    '🚆',
+    '🚇',
+    '🚂',
+    '🚊',
+    '🛴',
+    '🚲',
+    '🛹',
+    '🚞',
+    '🚈',
+    '🛩️',
+    '✈️',
+    '🚁',
+    '🛫',
+    '🛬',
+    '🚟',
+    '🚠',
+    '🚡',
+    '🛩️',
+    '🛰️',
+    '🛫',
+    '🛬',
+  ],
+
+  'Thiên nhiên': [
+    '🌳',
+    '🌴',
+    '🌲',
+    '🌵',
+    '🌾',
+    '🍃',
+    '🌱',
+    '🌿',
+    '🍂',
+    '🍃',
+    '🌼',
+    '🌸',
+    '🌷',
+    '🌺',
+    '🌻',
+    '🍄',
+    '🌍',
+    '🌎',
+    '🌏',
+    '🌑',
+    '🌒',
+    '🌓',
+    '🌔',
+    '🌕',
+    '🌖',
+    '🌗',
+    '🌘',
+    '🌙',
+    '🌚',
+    '🌛',
+    '🌜',
+    '🌝',
+    '🌞',
+    '🌛',
+    '🌧️',
+    '🌦️',
+    '🌨️',
+    '❄️',
+    '🌩️',
+    '⚡',
+    '🔥',
+    '💨',
+    '🌪️',
+    '🌫️',
+    '🌊',
+    '🏖️',
+    '🏝️',
+    '🏞️',
+    '🌅',
+    '🌄',
+    '🌇',
+    '🌆',
+    '🌃',
+    '🌉',
+    '🌌',
   ],
 }
 
@@ -1098,8 +1394,8 @@ button {
 
 .close-emoji-picker {
   position: absolute;
-  top: 10px;  /* Cách từ trên xuống */
-  right: 10px;  /* Cách từ phải vào */
+  top: 10px; /* Cách từ trên xuống */
+  right: 10px; /* Cách từ phải vào */
   background: none;
   border: none;
   font-size: 20px;
@@ -1107,23 +1403,68 @@ button {
   cursor: pointer;
 }
 .close-emoji-picker:hover {
-  color: #ff0000;  /* Đổi màu khi hover */
+  color: #ff0000; /* Đổi màu khi hover */
 }
 .emoji-categories {
   display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
+  flex-wrap: wrap; /* Cho phép các phần tử xuống dòng khi hết không gian */
+  gap: 10px; /* Khoảng cách giữa các nút */
+  justify-content: flex-start; /* Đảm bảo các nút canh lề trái */
+  margin-bottom: 10px; /* Thêm khoảng cách dưới cùng để không bị dính các phần tử dưới */
 }
 
 .emoji-categories button {
-  background: none;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px 12px;
+  padding: 6px 12px; /* Giảm padding để nút nhỏ hơn */
+  background-color: #333;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 15px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  white-space: nowrap; /* Đảm bảo văn bản không bị cắt ngắn */
+  flex: 0 1 33%; /* Mỗi nút chiếm 20% chiều rộng */
+  box-sizing: border-box; /* Đảm bảo padding không làm nút vượt ra ngoài */
+  text-align: center;
 }
 
 .emoji-categories button:hover {
-  background-color: #ddd;
+  background-color: blue;
+}
+
+.emoji-categories button:active {
+  background-color: #666;
+}
+
+.page-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Khoảng cách giữa các nút */
+  margin-top: 20px; /* Khoảng cách trên */
+}
+
+.page-buttons button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Màu nền nút */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s; /* Thêm hiệu ứng chuyển đổi */
+}
+
+.page-buttons button:hover {
+  background-color: #0056b3; /* Màu nền khi hover */
+  transform: translateY(-2px); /* Hiệu ứng nhấc nút khi hover */
+}
+
+.page-buttons button:disabled {
+  background-color: #888; /* Màu nền khi nút bị vô hiệu hóa */
+  cursor: not-allowed; /* Thay đổi con trỏ khi vô hiệu hóa */
+}
+
+.page-buttons button:disabled:hover {
+  transform: none; /* Không có hiệu ứng khi hover khi nút bị vô hiệu hóa */
 }
 </style>
