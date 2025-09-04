@@ -163,7 +163,7 @@ import {
 } from 'firebase/firestore'
 import { app } from '../../firebase.js'
 import { formatDistanceToNow } from 'date-fns'
-
+import { getDoc } from 'firebase/firestore';
 const auth = getAuth(app)
 const db = getFirestore(app)
 
