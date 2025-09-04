@@ -1,6 +1,5 @@
 import { defineConfigWithTheme } from 'vitepress'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
-import Gitalk from 'gitalk'
 
 export interface ThemeConfig {
   menuList: { name: string; url: string }[]
@@ -22,14 +21,14 @@ export interface ThemeConfig {
 export default defineConfigWithTheme<ThemeConfig>({
   lang: 'zh-CN',
   ignoreDeadLinks: true,
- cleanUrls: false, // ✅ Thêm để tránh lỗi 404 khi vào các path như /tags/
+  cleanUrls: false, // ✅ THÊM để tránh lỗi 404 khi vào các path như /tags/
 
   head: [
     ['link', { rel: 'shortcut icon', href: '/favicon.ico' }],
     ['link', { rel: 'stylesheet', href: 'https://unpkg.com/gitalk/dist/gitalk.css' }],
     ['script', { src: 'https://unpkg.com/gitalk/dist/gitalk.min.js' }],
-    ['link', { rel: 'stylesheet', href: '/bluearchive/font/Blueaka/Blueaka.css' }],
-    ['link', { rel: 'stylesheet', href: '/bluearchive/font/Blueaka_Bold/Blueaka_Bold.css' }],
+    ['link', { rel: 'stylesheet', href: '/font/Blueaka/Blueaka.css' }],
+    ['link', { rel: 'stylesheet', href: '/font/Blueaka_Bold/Blueaka_Bold.css' }],
     [
       'link',
       { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css' },

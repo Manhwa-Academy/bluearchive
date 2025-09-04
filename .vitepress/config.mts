@@ -1,8 +1,5 @@
 import { defineConfigWithTheme } from 'vitepress'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
-import Gitalk from 'gitalk'
-import { defineConfig } from 'vite'
-
 
 export interface ThemeConfig {
   menuList: { name: string; url: string }[]
@@ -20,7 +17,6 @@ export interface ThemeConfig {
   owner: string
   admin: string[]
 }
-
 
 export default defineConfigWithTheme<ThemeConfig>({
   lang: 'zh-CN',
