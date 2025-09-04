@@ -1,54 +1,24 @@
 <template>
   <div class="github-login-comment">
     <div class="login-area" v-if="!user">
+      <!-- Chỉ hiển thị textbox nhập bình luận và nút "Login with GitHub" khi chưa đăng nhập -->
       <textarea v-model="comment" placeholder="Nhập bình luận..." disabled></textarea>
       <button class="login-button" @click="signInWithGitHub">Login with GitHub</button>
       <br /><br />
       <button class="preview-button" :disabled="!comment.trim()">Preview</button>
     </div>
 
-    <!-- Khi người dùng đã đăng nhập, hiển thị thông báo đăng nhập thành công -->
-    <div v-if="isLoggedIn" class="login-success-message">
-      <p>Đăng nhập thành công!</p>
-    </div>
-    <div v-if="githubUserInfo" class="github-info">
-      <img :src="githubUserInfo.avatar_url" alt="User Avatar" class="github-avatar" />
-      <p>Tên GitHub: {{ githubUserInfo.login }}</p>
-      <p>Tên: {{ githubUserInfo.name || 'Chưa cập nhật' }}</p>
-      <p>Tiểu sử: {{ githubUserInfo.bio || 'Chưa có tiểu sử' }}</p>
-      <p>Số lượng Repository: {{ githubUserInfo.public_repos }}</p>
-      <p>
-        URL GitHub:
-        <a :href="githubUserInfo.html_url" target="_blank">{{ githubUserInfo.html_url }}</a>
-      </p>
-    </div>
     <div class="comment-area">
       <div v-if="user">
+        <!-- Hiển thị khi đã đăng nhập -->
         <div class="user-info">
           <img
             :src="user?.photoURL || 'default-avatar-url'"
             alt="User Avatar"
-            class="comment-avatar"
-            @click="
-              () => {
-                console.log('Avatar clicked')
-                getGitHubInfo() // Gọi đúng hàm mà không cần truyền thêm tham số
-              }
-            "
+            class="user-avatar"
           />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
           <button class="logout-button" @click="signOut">Đăng xuất</button>
-        </div>
-
-        <!-- Hiển thị thông tin GitHub khi nhấn vào avatar -->
-        <!-- Hiển thị thông tin GitHub khi nhấn vào avatar -->
-        <div v-if="githubUserInfo" class="github-info">
-          <p>Tên GitHub: {{ githubUserInfo.login }}</p>
-          <p>Số lượng Repository: {{ githubUserInfo.public_repos }}</p>
-          <p>
-            URL GitHub:
-            <a :href="githubUserInfo.html_url" target="_blank">{{ githubUserInfo.html_url }}</a>
-          </p>
         </div>
 
         <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
@@ -75,9 +45,10 @@
         </div>
       </div>
 
+      <!-- Hiển thị bình luận cho tất cả người dùng, dù họ có đăng nhập hay không -->
       <h3>Bình luận đã gửi ({{ comments.length }}):</h3>
       <ul>
-        <div
+        <li
           v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
           :key="index"
           class="comment-item"
@@ -104,7 +75,7 @@
             </div>
           </div>
 
-          <!-- Hiển thị phản hồi khi showReplies là true -->
+          <!-- Hiển thị phản hồi chỉ khi showReplies là true -->
           <ul v-if="c.showReplies && c.replies && c.replies.length > 0" class="replies-list">
             <li v-for="reply in c.replies" :key="reply.id" class="reply-item">
               <div class="comment">
@@ -147,13 +118,13 @@
             {{ c.showReplies ? 'Ẩn phản hồi' : 'Xem ' + c.replies.length + ' phản hồi' }}
           </button>
 
-          <!-- Hiển thị phần trả lời -->
+          <!-- Khung trả lời -->
           <div v-if="isReplyingToCommentId === c.id" class="reply-box">
             <textarea v-model="replyText" placeholder="Nhập trả lời..."></textarea>
             <button @click="submitReply(c.id)">Gửi trả lời</button>
             <button @click="cancelReply">Hủy</button>
           </div>
-        </div>
+        </li>
       </ul>
 
       <div v-if="isPreviewVisible" class="preview-box">
@@ -172,7 +143,6 @@
 </template>
 
 <script setup lang="ts">
-const githubUserInfo = ref<any | null>(null) // Khai báo biến githubUserInfo
 import { ref, onMounted } from 'vue'
 import {
   getAuth,
@@ -190,7 +160,6 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
-  getDoc,
 } from 'firebase/firestore'
 import { app } from '../../firebase.js'
 import { formatDistanceToNow } from 'date-fns'
@@ -201,52 +170,44 @@ const db = getFirestore(app)
 const user = ref<any | null>(null)
 const comment = ref('')
 const comments = ref<any[]>([])
-const mediaUrl = ref('')
+const mediaUrl = ref('') // For media URL input
 const previewText = ref('')
 const isPreviewVisible = ref(false)
 const replyText = ref('')
 const isReplyingToCommentId = ref<string | null>(null)
-const isLoggedIn = ref(false) // Trạng thái đăng nhập
-const toggleReplies = (commentId: string) => {
+const toggleReplies = (commentId) => {
   const comment = comments.value.find((c) => c.id === commentId)
   if (comment) {
-    comment.showReplies = !comment.showReplies
+    comment.showReplies = !comment.showReplies // Chuyển đổi trạng thái hiển thị của các phản hồi cho bình luận này
   }
 }
-
-async function signInWithGitHub() {
+function signInWithGitHub() {
   const provider = new GithubAuthProvider()
-  try {
-    await signInWithPopup(auth, provider)
-    isLoggedIn.value = true // Đánh dấu là đã đăng nhập
-  } catch (err) {
-    alert('Đăng nhập lỗi: ' + err.message)
-  }
+  signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message))
 }
 
 function signOut() {
   firebaseSignOut(auth)
     .then(() => {
-      user.value = null
+      user.value = null // Đặt lại user sau khi đăng xuất
       alert('Đăng xuất thành công!')
     })
     .catch((err) => {
       alert('Lỗi đăng xuất: ' + err.message)
     })
 }
-
 async function submitComment() {
   if (!comment.value.trim()) return
   try {
     const docRef = await addDoc(collection(db, 'comments'), {
-      userId: user.value ? user.value.uid : 'anonymous',
-      userName: user.value ? user.value.displayName : 'Người dùng ẩn danh',
-      userAvatar: user.value ? user.value.photoURL : 'default-avatar-url',
+      userId: user.value ? user.value.uid : 'anonymous', // Dùng ID ẩn danh khi chưa đăng nhập
+      userName: user.value ? user.value.displayName : 'Người dùng ẩn danh', // Tên ẩn danh nếu chưa đăng nhập
+      userAvatar: user.value ? user.value.photoURL : 'default-avatar-url', // Avatar ẩn danh nếu chưa đăng nhập
       text: comment.value.trim(),
       createdAt: new Date(),
       parentId: null, // Bình luận gốc
       replies: [], // Mảng trả lời
-      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null,
+      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Store media URL if exists
     })
     comment.value = ''
     mediaUrl.value = ''
@@ -256,63 +217,6 @@ async function submitComment() {
     alert('Gửi bình luận lỗi: ' + err.message)
   }
 }
-async function getGitHubInfo() {
-  const userName = user.value?.displayName // Lấy tên người dùng từ `user`
-  if (!userName) {
-    alert('Không tìm thấy tên người dùng!')
-    return
-  }
-  try {
-    const response = await fetch(`https://api.github.com/users/${userName}`)
-    if (response.ok) {
-      const data = await response.json()
-      githubUserInfo.value = data
-      console.log(data)
-    } else {
-      alert('Không thể lấy thông tin GitHub.')
-    }
-  } catch (error) {
-    console.error('Lỗi khi lấy thông tin GitHub:', error)
-  }
-}
-
-function displayGitHubInfo(data) {
-  const githubLoginElement = document.querySelector('#github-login') as HTMLElement
-  if (githubLoginElement) {
-    githubLoginElement.innerText = `Tên GitHub: ${data.login}`
-  } else {
-    console.error('#github-login không tìm thấy!')
-  }
-
-  const githubNameElement = document.querySelector('#github-name') as HTMLElement
-  if (githubNameElement) {
-    githubNameElement.innerText = `Tên: ${data.name || 'Chưa cập nhật'}`
-  } else {
-    console.error('#github-name không tìm thấy!')
-  }
-
-  const githubBioElement = document.querySelector('#github-bio') as HTMLElement
-  if (githubBioElement) {
-    githubBioElement.innerText = `Tiểu sử: ${data.bio || 'Chưa có tiểu sử'}`
-  } else {
-    console.error('#github-bio không tìm thấy!')
-  }
-
-  const githubReposElement = document.querySelector('#github-repos') as HTMLElement
-  if (githubReposElement) {
-    githubReposElement.innerText = `Số lượng Repo: ${data.public_repos}`
-  } else {
-    console.error('#github-repos không tìm thấy!')
-  }
-
-  const githubAvatarElement = document.querySelector('#github-avatar') as HTMLImageElement
-  if (githubAvatarElement) {
-    githubAvatarElement.src = data.avatar_url
-  } else {
-    console.error('#github-avatar không tìm thấy!')
-  }
-}
-
 function formatFullDate(timestamp: any) {
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
   return date.toLocaleString('vi-VN', {
@@ -366,12 +270,11 @@ async function confirmDelete(commentId: string) {
     await deleteComment(commentId)
   }
 }
-
 function replyToComment(commentId: string) {
   isReplyingToCommentId.value = commentId
-  console.log('Replying to comment ID:', isReplyingToCommentId.value) // In giá trị vào console
-  replyText.value = '' // Reset phần trả lời mỗi khi nhấn trả lời
+  replyText.value = '' // Đặt lại phần trả lời mỗi khi nhấn trả lời
 }
+
 async function submitReply(parentId: string) {
   if (!replyText.value.trim()) return
 
@@ -383,7 +286,7 @@ async function submitReply(parentId: string) {
       text: replyText.value.trim(),
       createdAt: new Date(),
       parentId: parentId, // Trả lời bình luận này
-      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null,
+      mediaUrl: mediaUrl.value ? mediaUrl.value.trim() : null, // Handle media for replies
     })
 
     replyText.value = ''
@@ -432,8 +335,9 @@ function isGif(url: string) {
 onMounted(() => {
   onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
+      // Kiểm tra nếu displayName là null, thay thế bằng tên mặc định
       user.value = currentUser
-      user.value.displayName = currentUser.displayName || 'Người dùng ẩn danh'
+      user.value.displayName = currentUser.displayName || 'Người dùng ẩn danh' // Tên mặc định
     }
   })
 
@@ -449,7 +353,6 @@ onMounted(() => {
   })
 })
 </script>
-
 <style scoped>
 .github-login-comment {
   max-width: 900px;
@@ -515,16 +418,14 @@ textarea:disabled {
 .user-info {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 .user-avatar {
   width: 45px;
   height: 45px;
   border-radius: 50%;
   margin-right: 15px;
-  cursor: pointer; /* Thêm cursor pointer khi hover lên avatar */
 }
-
 .logout-button {
   background-color: #f44336;
   color: white;
@@ -550,7 +451,6 @@ textarea:disabled {
   height: 35px;
   border-radius: 50%;
   margin-right: 15px;
-  cursor: pointer; /* Thêm thuộc tính này để avatar có thể được nhấn */
 }
 .comment-content {
   display: flex;
@@ -639,36 +539,5 @@ li {
   max-width: 100%;
   max-height: 400px; /* or any size that fits your layout */
   object-fit: contain; /* ensures the image fits within the container without distortion */
-}
-.github-login-comment {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-  background-color: #1e1e1e;
-  border-radius: 10px;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-.github-info {
-  background-color: #333;
-  padding: 10px;
-  margin-top: 15px;
-  border-radius: 5px;
-  display: block; /* Đảm bảo phần tử này hiển thị */
-}
-
-.github-info a {
-  color: #00bfff;
-  text-decoration: none;
-}
-
-.github-info a:hover {
-  text-decoration: underline;
-}
-
-.login-success-message {
-  color: green;
-  margin-bottom: 15px;
-  font-weight: bold;
 }
 </style>
