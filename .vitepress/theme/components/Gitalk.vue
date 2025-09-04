@@ -18,10 +18,24 @@
             class="user-avatar"
           />
           <p>Xin chào, {{ user?.displayName || 'Người dùng ẩn danh' }}</p>
+
           <button class="logout-button" @click="signOut">Đăng xuất</button>
         </div>
 
         <textarea v-model="comment" placeholder="Nhập bình luận..." :disabled="!user"></textarea>
+
+        <!-- Nút chọn Emoji -->
+        <button class="emoji-btn" @click="toggleEmojiPicker">
+          <i class="fas fa-smile"></i>
+          <!-- Dùng Font Awesome icon -->
+        </button>
+
+        <!-- Bảng chọn Emoji -->
+        <div v-if="emojiPickerVisible" class="emoji-picker">
+          <button v-for="emoji in emojis" :key="emoji" @click="addEmoji(emoji)">
+            {{ emoji }}
+          </button>
+        </div>
 
         <!-- Media Input -->
         <div class="media-input">
@@ -47,9 +61,17 @@
 
       <!-- Hiển thị bình luận cho tất cả người dùng, dù họ có đăng nhập hay không -->
       <h3>Bình luận đã gửi ({{ comments.length }}):</h3>
+      <div class="sorting-options">
+        <label for="sort-dropdown" class="sort-label">Sắp xếp theo</label>
+        <select id="sort-dropdown" v-model="sortOrder" @change="sortComments" class="sort-dropdown">
+          <option value="newest">Mới nhất</option>
+          <option value="oldest">Cũ nhất</option>
+        </select>
+      </div>
+
       <ul>
         <li
-          v-for="(c, index) in comments.filter((comment) => !comment.parentId)"
+          v-for="(c, index) in sortedCommentsList.filter((comment) => !comment.parentId)"
           :key="index"
           class="comment-item"
         >
@@ -58,6 +80,11 @@
             <div class="comment-content">
               <strong>{{ c.userName || 'Người dùng ẩn danh' }}</strong>
               <span class="comment-time"> ({{ formatFullDate(c.createdAt) }}) </span>
+              <span v-if="c.isPinned" class="pinned-label">Bình luận được ghim</span>
+              <span v-if="c.updatedAt" class="edit-time">
+                (Chỉnh sửa vào: {{ formatFullDate(c.updatedAt) }})
+              </span>
+
               <p>{{ c.text }}</p>
 
               <!-- Render Media -->
@@ -67,12 +94,35 @@
                 <img v-if="isGif(c.mediaUrl)" :src="c.mediaUrl" class="media" />
               </div>
 
+              <!-- Form nhập tài khoản mật khẩu để ghim bình luận -->
+              <div v-if="isPinFormVisible && currentCommentId === c.id" class="pin-form">
+                <input v-model="pinUsername" type="text" placeholder="Nhập tài khoản" />
+                <input v-model="pinPassword" type="password" placeholder="Nhập mật khẩu" />
+                <button @click="pinComment(c.id)">Ghim bình luận</button>
+                <button @click="closePinForm">Hủy</button>
+                <p v-if="pinError" class="error-message">Tài khoản hoặc mật khẩu sai!</p>
+              </div>
+
               <div class="comment-actions">
                 <!-- Hiển thị nút Xóa cho người dùng đã đăng nhập và là chủ sở hữu bình luận -->
                 <button v-if="user?.uid === c.userId" @click="confirmDelete(c.id)">Xóa</button>
                 <button v-if="user?.uid !== c.userId" @click="replyToComment(c.id)">Trả lời</button>
+                <button v-if="user?.uid === c.userId" @click="editComment(c.id)">Sửa</button>
+                <button v-if="user?.uid === c.userId && !c.isPinned" @click="showPinForm(c.id)">
+                  Ghim bình luận
+                </button>
+
+                <button v-if="user?.uid === c.userId && c.isPinned" @click="unpinComment(c.id)">
+                  Bỏ Ghim
+                </button>
               </div>
             </div>
+          </div>
+
+          <div v-if="isEditingCommentId === c.id" class="edit-box">
+            <textarea v-model="comment" placeholder="Nhập bình luận..."></textarea>
+            <button @click="submitEditComment(c.id)">Lưu thay đổi</button>
+            <button @click="cancelEdit">Hủy</button>
           </div>
 
           <!-- Hiển thị phản hồi chỉ khi showReplies là true -->
@@ -143,7 +193,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import {
   getAuth,
   GithubAuthProvider,
@@ -163,10 +213,112 @@ import {
 } from 'firebase/firestore'
 import { app } from '../../firebase.js'
 import { formatDistanceToNow } from 'date-fns'
-import { getDoc } from 'firebase/firestore';
+import { getDoc } from 'firebase/firestore'
+import { updateDoc } from 'firebase/firestore'
+
+const emojiPickerVisible = ref(false)
+const emojis = ['😊', '😂', '😍', '🥺', '😎', '😢', '👍', '❤️', '🤩']
+// Toggle hiển thị bảng emoji
+const toggleEmojiPicker = () => {
+  emojiPickerVisible.value = !emojiPickerVisible.value
+}
+// Chèn emoji vào bình luận
+const addEmoji = (emoji) => {
+  comment.value += emoji
+  emojiPickerVisible.value = false
+}
+
+
+
+const isPinFormVisible = ref(false) // Kiểm tra form ghim có hiển thị hay không
+const currentCommentId = ref(null) // Lưu ID của bình luận đang ghim
+const pinUsername = ref('') // Tài khoản nhập vào
+const pinPassword = ref('') // Mật khẩu nhập vào
+const pinError = ref(false) // Kiểm tra nếu tài khoản/mật khẩu sai
+
+// Hàm để hiển thị form nhập tài khoản/mật khẩu khi ghim
+function showPinForm(commentId) {
+  isPinFormVisible.value = true
+  currentCommentId.value = commentId // Lưu ID của bình luận để kiểm tra
+}
+
+// Hàm để đóng form nhập tài khoản/mật khẩu
+function closePinForm() {
+  isPinFormVisible.value = false
+  pinUsername.value = ''
+  pinPassword.value = ''
+  pinError.value = false
+}
+
+// Hàm để ghim bình luận
+const validUsername = 'ihentai.ws' // Tài khoản hợp lệ
+const validPassword = 'kimochi' // Mật khẩu hợp lệ
+const validEmail = 'vuliztva1@gmail.com' // Email của bạn
+
+// Hàm để ghim bình luận
+async function pinComment(commentId) {
+  // Kiểm tra nếu người dùng đã đăng nhập và có email hợp lệ
+  if (user.value?.email !== validEmail) {
+    alert('Bạn phải là chủ sở hữu tài khoản này mới có thể ghim bình luận!')
+    return
+  }
+
+  // Kiểm tra tài khoản và mật khẩu hợp lệ
+  if (pinUsername.value === validUsername && pinPassword.value === validPassword) {
+    // Kiểm tra xem đã có bình luận nào được ghim chưa
+    const pinnedComment = comments.value.find((c) => c.isPinned)
+
+    // Nếu đã có bình luận ghim, báo lỗi và yêu cầu bỏ ghim bình luận trước
+    if (pinnedComment) {
+      alert('Bạn phải bỏ ghim bình luận trước khi ghim bình luận khác!')
+      return // Không cho phép ghim nếu đã có bình luận ghim
+    }
+
+    const comment = comments.value.find((c) => c.id === commentId)
+
+    if (comment) {
+      // Đánh dấu bình luận mới là ghim
+      comment.isPinned = true
+
+      // Cập nhật Firestore để ghim bình luận mới
+      await updateDoc(doc(db, 'comments', commentId), { isPinned: true })
+      alert('Bình luận đã được ghim!')
+    }
+
+    closePinForm() // Đóng form sau khi ghim thành công
+  } else {
+    pinError.value = true // Hiển thị lỗi nếu tài khoản/mật khẩu sai
+  }
+}
+
+// Hàm để bỏ ghim bình luận
+async function unpinComment(commentId) {
+  const comment = comments.value.find((c) => c.id === commentId)
+  if (comment) {
+    comment.isPinned = false // Bỏ ghim bình luận
+    // Cập nhật trạng thái bỏ ghim vào Firestore
+    await updateDoc(doc(db, 'comments', commentId), {
+      isPinned: false,
+    })
+    alert('Bình luận đã được bỏ ghim!')
+  }
+}
+
+// Sắp xếp bình luận: ghim lên đầu tiên
+const sortedComments = computed(() => {
+  if (sortOrder.value === 'oldest') {
+    return [...comments.value].sort((a, b) => a.createdAt - b.createdAt)
+  } else {
+    // Sắp xếp bình luận ghim lên đầu tiên
+    return [...comments.value]
+      .sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0))
+      .sort((a, b) => b.createdAt - a.createdAt)
+  }
+})
+const sortOrder = ref('newest') // Mặc định là sắp xếp theo "Mới nhất"
 const auth = getAuth(app)
 const db = getFirestore(app)
-
+const isEditingCommentId = ref<string | null>(null) // Theo dõi bình luận đang chỉnh sửa
 const user = ref<any | null>(null)
 const comment = ref('')
 const comments = ref<any[]>([])
@@ -181,9 +333,59 @@ const toggleReplies = (commentId) => {
     comment.showReplies = !comment.showReplies // Chuyển đổi trạng thái hiển thị của các phản hồi cho bình luận này
   }
 }
+const sortedCommentsList = computed(() => {
+  // Phân tách bình luận ghim và không ghim
+  const pinnedComments = comments.value.filter((comment) => comment.isPinned)
+  const nonPinnedComments = comments.value.filter((comment) => !comment.isPinned)
+
+  // Sắp xếp bình luận ghim theo thời gian tạo (mới nhất trước) hoặc cũ nhất
+  pinnedComments.sort((a, b) => b.createdAt - a.createdAt)
+
+  // Sắp xếp bình luận không ghim theo thời gian tạo (mới nhất trước) hoặc cũ nhất
+  nonPinnedComments.sort((a, b) => b.createdAt - a.createdAt)
+
+  // Nếu chọn "Cũ nhất", đảo ngược thứ tự của các bình luận không ghim
+  if (sortOrder.value === 'oldest') {
+    nonPinnedComments.reverse() // Đảo ngược để sắp xếp theo cũ nhất
+  }
+
+  // Kết hợp bình luận ghim và bình luận không ghim
+  return [...pinnedComments, ...nonPinnedComments]
+})
+
 function signInWithGitHub() {
   const provider = new GithubAuthProvider()
   signInWithPopup(auth, provider).catch((err) => alert('Đăng nhập lỗi: ' + err.message))
+}
+async function submitEditComment(commentId: string) {
+  if (!comment.value.trim()) return
+
+  try {
+    const commentRef = doc(db, 'comments', commentId)
+    await updateDoc(commentRef, {
+      text: comment.value.trim(),
+      updatedAt: new Date(), // Thêm thời gian chỉnh sửa
+    })
+
+    // Sau khi cập nhật, cập nhật lại giao diện
+    isEditingCommentId.value = null // Reset trạng thái chỉnh sửa
+    comment.value = '' // Reset nội dung
+    alert('Bình luận đã được chỉnh sửa thành công!') // Thông báo khi chỉnh sửa
+  } catch (err) {
+    alert('Sửa bình luận lỗi: ' + err.message)
+  }
+}
+function sortComments() {}
+function editComment(commentId: string) {
+  const commentToEdit = comments.value.find((c) => c.id === commentId)
+  if (commentToEdit) {
+    comment.value = commentToEdit.text // Điền sẵn nội dung vào textarea
+    isEditingCommentId.value = commentId // Đánh dấu bình luận đang được chỉnh sửa
+  }
+}
+function cancelEdit() {
+  isEditingCommentId.value = null
+  comment.value = ''
 }
 
 function signOut() {
@@ -271,10 +473,15 @@ async function confirmDelete(commentId: string) {
   }
 }
 function replyToComment(commentId: string) {
+  // Kiểm tra xem người dùng đã đăng nhập hay chưa
+  if (!user.value) {
+    alert('Bạn phải đăng nhập để trả lời bình luận!')
+    return // Nếu chưa đăng nhập, dừng lại không cho phép trả lời
+  }
+
   isReplyingToCommentId.value = commentId
   replyText.value = '' // Đặt lại phần trả lời mỗi khi nhấn trả lời
 }
-
 async function submitReply(parentId: string) {
   if (!replyText.value.trim()) return
 
@@ -338,9 +545,9 @@ onMounted(() => {
       // Kiểm tra nếu displayName là null, thay thế bằng tên mặc định
       user.value = currentUser
       user.value.displayName = currentUser.displayName || 'Người dùng ẩn danh' // Tên mặc định
+      user.value.photoURL = currentUser.photoURL // URL GitHub của người dùng (hoặc link khác nếu bạn dùng API GitHub)
     }
   })
-
   const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'))
   onSnapshot(q, (snapshot) => {
     comments.value = snapshot.docs.map((doc) => ({
@@ -357,15 +564,18 @@ onMounted(() => {
 .github-login-comment {
   max-width: 900px;
   margin: auto;
-  padding: 20px;
+  padding: 30px;
   background-color: #1e1e1e;
   border-radius: 10px;
   color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
+/* Khu vực đăng nhập */
 .login-area {
   text-align: center;
+  margin-bottom: 20px;
 }
+/* Textarea */
 textarea {
   width: 100%;
   padding: 12px;
@@ -377,9 +587,11 @@ textarea {
   color: white;
   font-size: 14px;
 }
+
 textarea:disabled {
   background-color: #555;
 }
+/* Nhóm nút (buttons) */
 .button-group {
   display: flex;
   justify-content: space-between;
@@ -392,16 +604,19 @@ textarea:disabled {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
+
 .submit-button {
   background-color: #4caf50;
   color: white;
 }
+
 .preview-button {
   background-color: #555;
   color: white;
 }
+
 .login-button {
   background-color: #007bff;
   color: white;
@@ -412,13 +627,26 @@ textarea:disabled {
   background-color: #888;
   cursor: not-allowed;
 }
+
+.submit-button:hover,
+.preview-button:hover,
+.login-button:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 .comment-area {
   margin-top: 30px;
 }
+
+/* Khu vực thông tin người dùng */
 .user-info {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  gap: 10px;
+}
+
+.user-info p {
+  margin-right: 10px; /* Thêm margin cho phần tử <p> */
 }
 .user-avatar {
   width: 45px;
@@ -539,5 +767,155 @@ li {
   max-width: 100%;
   max-height: 400px; /* or any size that fits your layout */
   object-fit: contain; /* ensures the image fits within the container without distortion */
+}
+.comment-time {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+.edit-time {
+  font-size: 12px;
+  color: #888;
+  line-height: 3;
+}
+.edit-box {
+  margin-top: 20px;
+  background-color: #444;
+  padding: 15px;
+  border-radius: 8px;
+}
+/* Cải tiến giao diện */
+.sorting-options {
+  position: relative;
+  display: inline-block;
+}
+
+.sort-label {
+  font-size: 16px;
+  color: white;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.sort-dropdown {
+  padding: 10px 15px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  width: 200px;
+}
+
+.sort-dropdown:hover {
+  background-color: #444;
+}
+
+.sort-dropdown:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+.sort-dropdown option {
+  background-color: #333;
+  color: white;
+}
+
+/* Áp dụng cho tùy chọn hiện tại (Khi người dùng chọn "Mới nhất" hoặc "Cũ nhất") */
+.sort-dropdown option:checked {
+  background-color: aqua;
+  color: white;
+}
+/* Form nhập tài khoản và mật khẩu */
+.pin-form {
+  background-color: blanchedalmond;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.pin-form input {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: #444;
+  color: white;
+  border: 1px solid #555;
+}
+
+.pin-form button {
+  width: 40%;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.pin-form button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+
+/* Đảm bảo các phần khác không bị ảnh hưởng */
+.comment-actions button {
+  background: transparent;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+.comment-actions button:hover {
+  color: #00bfff;
+}
+.pinned-label {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #4caf50; /* Màu xanh lá cho nhãn ghim */
+  background-color: #333;
+  padding: 2px 5px;
+  font-weight: bold;
+}
+.emoji-btn {
+  background: none;
+  border: none;
+  color: #f0c674;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.emoji-picker {
+  position: absolute;
+  top: 40px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.emoji-picker button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+button {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>
